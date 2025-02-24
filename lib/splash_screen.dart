@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'login_screen.dart'; // Import Login Screen
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()), // Navigate to Login
       );
     });
   }
@@ -25,38 +26,21 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: RadialGradient(
-            
             radius: 1.2,
             colors: [
-              Color(0xFF011D47), 
-              Color(0xFF00050B), 
-              Color(0xFF00060E), 
+              Color(0xFF011D47),
+              Color(0xFF00050B),
+              Color(0xFF00060E),
             ],
-            stops: [0.0, 1.0, 1.0], 
+            stops: [0.0, 1.0, 1.0],
           ),
         ),
         child: const Center(
           child: Image(
-            image: AssetImage('assets/logo.png'), 
-            width: 500,
-            height: 500,
+            image: AssetImage('assets/logo.png'),
+            width: 200, // Reduced size for better appearance
+            height: 200,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(
-          'Home Screen',
-          style: TextStyle(fontSize: 24, color: Colors.white),
         ),
       ),
     );
