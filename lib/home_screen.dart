@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset('assets/logo1.png', height: 40), // Your logo
+          Image.asset('assets/logomark.png', height: 40), // Your logo
           const Text(
             "Home",
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
@@ -115,7 +115,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 // Tank Level Circular Indicator (Fixed Layout)
+// Tank Level Circular Indicator (Fixed Layout)
 Widget _buildTankIndicator() {
+ 
+  Color getColor(double percentage) {
+    if (percentage <= 20) {
+      return const Color(0xFF66FF66); // Light Green
+    } else if (percentage <= 40) {
+      return const Color(0xFF00C49A); // Green
+    } else if (percentage <= 60) {
+      return const Color.fromARGB(255, 255, 234, 172); // Yellow
+    } else if (percentage <= 80) {
+      return const Color(0xFFFF9800); // Orange
+    } else {
+      return const Color(0xFFFF3D00); // Red
+    }
+  }
+
   return Column(
     children: [
       const SizedBox(height: 20),
@@ -128,62 +144,69 @@ Widget _buildTankIndicator() {
         ),
       ),
       const SizedBox(height: 30), // Adjusted spacing
-      SizedBox(
-        height: 280, // Adjusted size to match the UI
-        width: 280,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Circular Progress Indicator (Styled to Match UI)
-            SizedBox(
-              height: 260, // Adjust size
-              width: 260,
-              child: CircularProgressIndicator(
-                value: tankPercentage / 100,
-                strokeWidth: 18, // Thick stroke for bold look
-                backgroundColor: Colors.white.withOpacity(0.3),
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                  Color(0xFF00C49A), // Teal color matching the UI
-                ),
-              ),
-            ),
-            // Centered Logo and Text
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      TweenAnimationBuilder(
+        tween: Tween<double>(begin: 0, end: tankPercentage),
+        duration: const Duration(seconds: 2), // Smooth animation
+        builder: (context, double animatedValue, child) {
+          Color progressColor = getColor(animatedValue); // Dynamic color update
+
+          return SizedBox(
+            height: 280, // Adjusted size to match the UI
+            width: 280,
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                Image.asset(
-                  'assets/logo1.png',
-                  height: 100, // Perfect size for inside circle
+                // Circular Progress Indicator (Animated)
+                SizedBox(
+                  height: 260,
+                  width: 260,
+                  child: CircularProgressIndicator(
+                    value: animatedValue / 100,
+                    strokeWidth: 18, // Thick stroke for bold look
+                    backgroundColor: Colors.white.withOpacity(0.3),
+                    valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                  ),
                 ),
-                const SizedBox(height: 5),
-                const Text(
-                  "Tap here",
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                // Centered Logo and Text
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/logomark.png',
+                      height: 100, // Perfect size for inside circle
+                    ),
+                    const SizedBox(height: 5),
+                    const Text(
+                      "Tap here",
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+                // Percentage Text Inside the Circle (Animated)
+                Positioned(
+                  bottom: 20, // Moves percentage inside the circle
+                  child: Text(
+                    "${animatedValue.toStringAsFixed(0)}%", // Rounded percentage with animation
+                    style: TextStyle(
+                      color: progressColor, // Dynamic Color for Percentage Text
+                      fontSize: 28, // Adjusted for better visibility
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
             ),
-            // Percentage Text Inside the Circle
-            Positioned(
-              bottom: 20, // Moves percentage inside the circle
-              child: Text(
-                "${tankPercentage.toStringAsFixed(0)}%", // Rounded percentage
-                style: const TextStyle(
-                  color: Color(0xFF00C49A), // Matching the UI color
-                  fontSize: 28, // Adjusted for better visibility
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     ],
   );
 }
+
 
 
   // Placeholder for bottom section
@@ -201,3 +224,4 @@ Widget _buildTankIndicator() {
     );
   }
 }
+
