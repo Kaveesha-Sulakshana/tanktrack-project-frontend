@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: const Center(
           child: Image(
             image: AssetImage('assets/logo.png'),
-            width: 500,
+            width: 500, // Maintained the width for consistency
             height: 500,
           ),
         ),
