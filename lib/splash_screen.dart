@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'login_screen.dart'; // Import Login Screen
+import 'login_screen.dart'; // Import LoginScreen
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginScreen()), // Navigate to Login
+        MaterialPageRoute(builder: (context) => const LoginScreen()), // Navigate to LoginScreen
       );
     });
   }
@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: const Center(
           child: Image(
             image: AssetImage('assets/logo.png'),
-            width: 500, // Reduced size for better appearance
+            width: 500, // Maintained the width for consistency
             height: 500,
           ),
         ),
