@@ -26,7 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
     dbRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
         setState(() {
-          tankPercentage = double.parse(event.snapshot.child('percentage').value.toString());
+          tankPercentage = double.parse(
+            event.snapshot.child('percentage').value.toString(),
+          );
         });
       }
     });
@@ -52,20 +54,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-  decoration: const BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: RadialGradient(
             radius: 1.2,
-            colors: [
-              Color(0xFF011D47),
-              Color(0xFF00050B),
-              Color(0xFF00060E),
-            ],
+            colors: [Color(0xFF011D47), Color(0xFF00050B), Color(0xFF00060E)],
             stops: [0.0, 1.0, 1.0],
           ),
         ),
-
-
-
 
         child: SafeArea(
           child: Column(
@@ -92,7 +87,11 @@ class _HomeScreenState extends State<HomeScreen> {
           Image.asset('assets/logomark.png', height: 40),
           const Text(
             "Home",
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           const Icon(Icons.notifications, color: Colors.white),
         ],
@@ -102,51 +101,67 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // 🔹 User Welcome Card
   Widget _buildUserCard() {
-  String todayDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-    child: Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(15),
+    String todayDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Pushes content apart
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  todayDate,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  "Welcome Back",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  "User",
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const Icon(
+              Icons.account_circle,
+              size: 80,
+              color: Colors.white,
+            ), // Moves icon to right
+          ],
+        ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pushes content apart
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                todayDate,
-                style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 16),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                "Welcome Back",
-                style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                "User",
-                style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const Icon(Icons.account_circle, size: 80, color: Colors.white), // Moves icon to right
-        ],
-      ),
-    ),
-  );
-}
-
+    );
+  }
 
   // 🔹 Tank Level Circular Indicator
   Widget _buildTankIndicator() {
     Color getColor(double percentage) {
       if (percentage <= 20) return const Color(0xFF66FF66); // Light Green
       if (percentage <= 40) return const Color(0xFF00C49A); // Green
-      if (percentage <= 60) return const Color.fromARGB(255, 255, 234, 172); // Yellow
+      if (percentage <= 60)
+        return const Color.fromARGB(255, 255, 234, 172); // Yellow
       if (percentage <= 80) return const Color(0xFFFF9800); // Orange
       return const Color(0xFFFF3D00); // Red
     }
@@ -187,10 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'assets/logomark.png',
-                        height: 100,
-                      ),
+                      Image.asset('assets/logomark.png', height: 100),
                       const SizedBox(height: 5),
                       const Text(
                         "Tap here",
@@ -224,17 +236,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // 🔹 Bottom Navigation Bar (Fixed Navigation Highlight)
   Widget _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      backgroundColor: Colors.black,
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.white54,
-      currentIndex: _selectedIndex, // Highlight selected tab
-      onTap: _onItemTapped,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.warning), label: "Alerts"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
-      ],
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.black, // Full-width background color
+      ),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.transparent, // Keep container color
+        type: BottomNavigationBarType.fixed, // Equal spacing for icons
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white54,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
+        iconSize: 30, // Increase icon size
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0, // Remove shadow
+        items: [
+          const BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
+          BottomNavigationBarItem(
+            icon: Container(
+              padding: const EdgeInsets.all(10), // Padding to lift the button
+
+              child: const Icon(
+                Icons.warning_amber_rounded, // Emergency icon
+                color: Colors.white,
+                size: 32, // Bigger size for prominence
+              ),
+            ),
+            label: "",
+          ),
+          const BottomNavigationBarItem(icon: Icon(Icons.settings), label: ""),
+        ],
+      ),
     );
   }
 

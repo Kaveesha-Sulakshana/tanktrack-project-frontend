@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 
-
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -19,21 +18,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         decoration: const BoxDecoration(
           gradient: RadialGradient(
             radius: 1.2,
-            colors: [
-              Color(0xFF011D47),
-              Color(0xFF00050B),
-              Color(0xFF00060E),
-            ],
+            colors: [Color(0xFF011D47), Color(0xFF00050B), Color(0xFF00060E)],
             stops: [0.0, 1.0, 1.0],
           ),
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              _buildSettingsList(),
-            ],
-          ),
+          child: Column(children: [_buildAppBar(), _buildSettingsList()]),
         ),
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
@@ -49,7 +39,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Image.asset('assets/logomark.png', height: 40),
           const Text(
             "Settings",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           const Icon(Icons.notifications, color: Colors.white),
         ],
@@ -85,7 +79,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           Icon(icon, color: Colors.green, size: 24),
           const SizedBox(width: 15),
-          Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+          Text(
+            title,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
         ],
       ),
     );
