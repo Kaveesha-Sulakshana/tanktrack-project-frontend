@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'models/emergency_service.dart'; // Import your data model
+import 'models/emergency_service.dart';
+import 'home_screen.dart';  // Import Home Screen
+import 'settings_screen.dart';  // Import Settings Screen
 
 class EmergencyScreen extends StatefulWidget {
   @override
@@ -10,7 +12,8 @@ class EmergencyScreen extends StatefulWidget {
 
 class _EmergencyScreenState extends State<EmergencyScreen> {
   List<EmergencyService> emergencyServices = [];
-  bool isLoading = true; // To show loading indicator
+  bool isLoading = true; // Show loading indicator
+  int _selectedIndex = 1; // Set Emergency as the default active tab
 
   @override
   void initState() {
@@ -44,6 +47,26 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
     }
   }
 
+  void _onItemTapped(int index) {
+    if (index != _selectedIndex) {
+      setState(() {
+        _selectedIndex = index;
+      });
+
+      if (index == 0) { // Navigate to Home Page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } else if (index == 2) { // Navigate to Settings Page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SettingsScreen()),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,35 +74,90 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
         title: Text("Emergency Contacts"),
         backgroundColor: Colors.black,
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator()) // Show loader while fetching data
-          : ListView.builder(
-              itemCount: emergencyServices.length,
-              itemBuilder: (context, index) {
-                final service = emergencyServices[index];
-                return Card(
-                  margin: EdgeInsets.all(10),
-                  child: ListTile(
-                    leading: Icon(Icons.local_hospital, color: Colors.red),
-                    title: Text(service.name, style: TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(service.address),
-                        Text(service.phoneNumber, style: TextStyle(color: Colors.blue)),
-                      ],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            radius: 1.2,
+            colors: [Color(0xFF011D47), Color(0xFF00050B), Color(0xFF00060E)],
+            stops: [0.0, 1.0, 1.0],
+          ),
+        ),
+        child: isLoading
+            ? Center(child: CircularProgressIndicator()) // Show loader while fetching data
+            : ListView.builder(
+                itemCount: emergencyServices.length,
+                itemBuilder: (context, index) {
+                  final service = emergencyServices[index];
+                  return Card(
+                    color: Colors.white.withOpacity(0.1), // Slight transparency for better look
+                    margin: EdgeInsets.all(10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.star, color: Colors.amber),
-                        Text(service.rating.toString()),
-                      ],
+                    child: ListTile(
+                      leading: Icon(Icons.local_hospital, color: Colors.red),
+                      title: Text(
+                        service.name,
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(service.address, style: TextStyle(color: Colors.white70)),
+                          Text(service.phoneNumber, style: TextStyle(color: Colors.blueAccent)),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.star, color: Colors.amber),
+                          Text(service.rating.toString(), style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
+      ),
+      bottomNavigationBar: _buildBottomNavigationBar(), // Add Bottom Navigation Bar
+    );
+  }
+
+  // 🔹 Bottom Navigation Bar
+  Widget _buildBottomNavigationBar() {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.black, // Full-width background color
+      ),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.transparent, // Keep container color
+        type: BottomNavigationBarType.fixed, // Equal spacing for icons
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white54,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
+        iconSize: 30, // Increase icon size
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0, // Remove shadow
+        items: [
+          const BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
+          BottomNavigationBarItem(
+            icon: Container(
+              padding: const EdgeInsets.all(10), // Padding to lift the button
+              child: const Icon(
+                Icons.warning_amber_rounded, // Emergency icon
+                color: Colors.white,
+                size: 32, // Bigger size for prominence
+              ),
             ),
+            label: "",
+          ),
+          const BottomNavigationBarItem(icon: Icon(Icons.settings), label: ""),
+        ],
+      ),
     );
   }
 }

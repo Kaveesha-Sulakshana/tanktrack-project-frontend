@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'emergency_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -9,15 +10,24 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final int _selectedIndex = 2; // 0 = Home, 1 = Alerts, 2 = Settings
+  int _selectedIndex = 2; // Settings is selected by default
 
-  // onItemTapped to handle navigation
+  // Navigation function
   void _onItemTapped(int index) {
     if (index != _selectedIndex) {
+      setState(() {
+        _selectedIndex = index;
+      });
+
       if (index == 0) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else if (index == 1) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => EmergencyScreen()),
         );
       }
     }
@@ -116,7 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         unselectedFontSize: 12,
         iconSize: 30, // Increase icon size
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped, // Fixed: This function now exists
+        onTap: _onItemTapped,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         elevation: 0, // Remove shadow
