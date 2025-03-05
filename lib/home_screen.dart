@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'settings_screen.dart';
+import 'emergency_screen.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -35,20 +36,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onItemTapped(int index) {
-    if (index != _selectedIndex) {
-      setState(() {
-        _selectedIndex = index;
-      });
+  if (index != _selectedIndex) {
+    setState(() {
+      _selectedIndex = index;
+    });
 
-      if (index == 2) {
-        // Navigate to Settings Page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const SettingsScreen()),
-        );
-      }
+    if (index == 1) { // Emergency button index
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EmergencyScreen()),
+      );
+    } else if (index == 2) { // Settings button index
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+      );
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
