@@ -100,15 +100,51 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(service.address, style: TextStyle(color: Colors.white70)),
-                          Text(service.phoneNumber, style: TextStyle(color: Colors.blueAccent)),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.star, color: Colors.amber),
-                          Text(service.rating.toString(), style: TextStyle(color: Colors.white)),
+                          // 📍 Location with Icon
+                          Row(
+                            children: [
+                              Icon(Icons.location_on, color: Colors.red, size: 18), // Location icon
+                              SizedBox(width: 5), // Small space
+                              Expanded(
+                                child: Text(
+                                  service.address,
+                                  style: TextStyle(color: Colors.white70),
+                                  overflow: TextOverflow.ellipsis, // Prevents long text overflow
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          // 📞 Phone Number with Icon
+                          Row(
+                            children: [
+                              Icon(Icons.phone, color: Colors.green, size: 18), // Phone icon
+                              SizedBox(width: 5),
+                              Text(
+                                service.phoneNumber,
+                                style: TextStyle(color: Colors.blueAccent),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 5), // Space before stars
+
+                          //  Display Stars Below the Phone Number 
+                          Row(
+                            children: List.generate(5, (starIndex) {
+                              return Icon(
+                                starIndex < service.rating.round() ? Icons.star : Icons.star_border,
+                                color: Colors.amber,
+                                size: 20,
+                              );
+                            }),
+                          ),
+
+                          // Show Numeric Rating Below Stars
+                          Text(
+                            "Rating: ${service.rating.toString()}",
+                            style: const TextStyle(color: Colors.white70, fontSize: 14),
+                          ),
                         ],
                       ),
                     ),
@@ -145,7 +181,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
       return CircleAvatar(
         radius: 25,
         backgroundColor: Colors.white,
-        backgroundImage: NetworkImage(service.logoUrl!), // ✅ Load online logo
+        backgroundImage: NetworkImage(service.logoUrl!), //  Load online logo
         onBackgroundImageError: (_, __) {
           print("Error loading image for: ${service.name}");
         },
@@ -154,7 +190,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
       return CircleAvatar(
         radius: 25,
         backgroundColor: Colors.white,
-        backgroundImage: AssetImage(_getLocalLogo(service.name)), // ✅ Load mapped local image
+        backgroundImage: AssetImage(_getLocalLogo(service.name)), //  Load mapped local image
       );
     }
   }
