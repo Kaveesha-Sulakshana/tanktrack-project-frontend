@@ -30,6 +30,10 @@ flutter:
     - assets/logo.png
     - assets/logo1.png
     - assets/logomark.png
+    - assets/service1.png
+    - assets/service2.png
+    - assets/service3.png
+    - assets/service4.png
 
 flutter_icons:
   android: true
