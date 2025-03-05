@@ -11,6 +11,18 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final int _selectedIndex = 2; // 0 = Home, 1 = Alerts, 2 = Settings
 
+  // onItemTapped to handle navigation
+  void _onItemTapped(int index) {
+    if (index != _selectedIndex) {
+      if (index == 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,12 +30,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
         decoration: const BoxDecoration(
           gradient: RadialGradient(
             radius: 1.2,
-            colors: [Color(0xFF011D47), Color(0xFF00050B), Color(0xFF00060E)],
+            colors: [
+              Color(0xFF011D47),
+              Color(0xFF00050B),
+              Color(0xFF00060E),
+            ],
             stops: [0.0, 1.0, 1.0],
           ),
         ),
         child: SafeArea(
-          child: Column(children: [_buildAppBar(), _buildSettingsList()]),
+          child: Column(
+            children: [
+              _buildAppBar(),
+              _buildSettingsList(),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
@@ -39,11 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Image.asset('assets/logomark.png', height: 40),
           const Text(
             "Settings",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const Icon(Icons.notifications, color: Colors.white),
         ],
@@ -79,34 +96,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           Icon(icon, color: Colors.green, size: 24),
           const SizedBox(width: 15),
-          Text(
-            title,
-            style: const TextStyle(color: Colors.white, fontSize: 16),
-          ),
+          Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
         ],
       ),
     );
   }
 
   Widget _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      backgroundColor: Colors.black,
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.white54,
-      currentIndex: _selectedIndex, // Highlight selected tab
-      onTap: (index) {
-        if (index == 0 && _selectedIndex != 0) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-          );
-        }
-      },
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.warning), label: "Alerts"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
-      ],
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.black, // Full-width background color
+      ),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.transparent, // Keep container color
+        type: BottomNavigationBarType.fixed, // Equal spacing for icons
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white54,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
+        iconSize: 30, // Increase icon size
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped, // Fixed: This function now exists
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0, // Remove shadow
+        items: [
+          const BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
+          BottomNavigationBarItem(
+            icon: Container(
+              padding: const EdgeInsets.all(10), // Padding to lift the button
+              child: const Icon(
+                Icons.warning_amber_rounded, // Emergency icon
+                color: Colors.white,
+                size: 32, // Bigger size for prominence
+              ),
+            ),
+            label: "",
+          ),
+          const BottomNavigationBarItem(icon: Icon(Icons.settings), label: ""),
+        ],
+      ),
     );
   }
 }
