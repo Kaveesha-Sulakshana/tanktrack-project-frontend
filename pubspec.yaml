@@ -29,6 +29,7 @@ flutter:
     - assets/logo.png
     - assets/logo1.png
     - assets/logomark.png
+    - assets/loginlogo.png
 
 flutter_icons:
   android: true
