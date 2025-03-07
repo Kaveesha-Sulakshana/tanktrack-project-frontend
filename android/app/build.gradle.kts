@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android") version "2.1.0"
+
+
 
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
@@ -12,7 +14,7 @@ plugins {
 android {
     namespace = "com.example.flutter_application_1" // Ensure this matches your Firebase project
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -28,7 +30,7 @@ android {
         applicationId = "com.example.flutter_application_1"
 
         // Minimum and target SDK versions
-        minSdk = flutter.minSdkVersion
+        minSdk = 23 
         targetSdk = flutter.targetSdkVersion
 
         // App Version
