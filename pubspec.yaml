@@ -1,0 +1,41 @@
+name: flutter_application_1
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  firebase_core: ^2.24.0   # ✅ Compatible with Firebase services
+  firebase_auth: ^4.15.0   # ✅ Required for authentication
+  firebase_database: 10.5.7  # ✅ Downgrade to match firebase_core
+  google_sign_in: ^6.2.1
+  fl_chart: ^0.70.2
+  google_fonts: ^6.1.0
+  intl: ^0.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/logo.png
+    - assets/logo1.png
+    - assets/logomark.png
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo1.png"
+  adaptive_icon_foreground: "assets/logo1.png"
+  adaptive_icon_background: "#ffffff"
