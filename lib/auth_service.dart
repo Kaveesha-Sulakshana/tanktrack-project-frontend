@@ -71,9 +71,12 @@ class AuthService {
   }
 
   // Check if user is logged in
-  bool isUserLoggedIn() {
+  // Check if user is really logged in (force session refresh)
+  Future<bool> isUserLoggedIn() async {
+    await _auth.currentUser?.reload(); // Forces Firebase to refresh user session
     return _auth.currentUser != null;
   }
+
 
   // Get user profile details
   Map<String, dynamic>? getUserProfile() {
