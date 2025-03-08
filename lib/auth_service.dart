@@ -13,55 +13,84 @@ class AuthService {
         password: password,
       );
       return credential.user;
+    } on FirebaseAuthException catch (e) {
+      print("❌ Firebase Auth Error (Email Sign-In): ${e.message}");
+      return null;
     } catch (e) {
-      print("Error in Email Sign-In: $e");
+      print("❌ Unexpected error in Email Sign-In: $e");
       return null;
     }
   }
 
-  // Google Sign-In
+  // Google Sign-In (Fixed Type Mismatch Error)
   Future<User?> signInWithGoogle() async {
     try {
-      // Attempt Google Sign-In
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null; // User canceled login
+      // Ensure previous sessions are signed out
+      await _googleSignIn.signOut();
 
-      // Authenticate Google user
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        print("⚠️ Google Sign-In was cancelled by the user.");
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      // Sign in to Firebase with Google credentials
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      // Sign in with Firebase
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
 
-      // Get the signed-in user
       User? user = userCredential.user;
 
-      // Print user details for debugging
-      print("Google Sign-In successful!");
-      print("User ID: ${user?.uid}");
-      print("User Email: ${user?.email}");
-      print("User Name: ${user?.displayName}");
-      print("User Photo: ${user?.photoURL}");
+      if (user != null) {
+        print("✅ Google Sign-In successful!");
+        print("User ID: ${user.uid}");
+        print("User Email: ${user.email}");
+        print("User Name: ${user.displayName}");
+        print("User Photo: ${user.photoURL}");
 
-      return user;
-    } catch (e, stacktrace) {
-      print("Error in Google Sign-In: $e");
-      print("Stacktrace: $stacktrace");
+        // Reload user to confirm existence in Firebase
+        await user.reload();
+        User? refreshedUser = FirebaseAuth.instance.currentUser;
+
+        if (refreshedUser == null) {
+          print(
+            "❌ User record not found in Firebase after sign-in. Signing out.",
+          );
+          await signOut();
+          return null;
+        }
+
+        return refreshedUser;
+      } else {
+        print("❌ Google Sign-In failed: No user found.");
+        return null;
+      }
+    } on FirebaseAuthException catch (e) {
+      print("❌ Firebase Auth Error (Google Sign-In): ${e.message}");
+      return null;
+    } catch (e) {
+      print("❌ Unexpected error in Google Sign-In: $e");
       return null;
     }
   }
 
-  // Logout
+  // Logout (Ensures Google & Firebase sign out)
   Future<void> signOut() async {
     try {
-      await _auth.signOut();
       await _googleSignIn.signOut();
-      print("User successfully signed out.");
+      await _auth.signOut();
+      print("✅ User successfully signed out.");
     } catch (e) {
-      print("Error signing out: $e");
+      print("❌ Error signing out: $e");
     }
   }
 
@@ -70,23 +99,29 @@ class AuthService {
     return _auth.currentUser;
   }
 
-  // Check if user is logged in
-  // Check if user is really logged in (force session refresh)
+  // Check if user is logged in (Handles session reload properly)
   Future<bool> isUserLoggedIn() async {
-    await _auth.currentUser?.reload(); // Forces Firebase to refresh user session
-    return _auth.currentUser != null;
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        await user.reload(); // Only reload if user exists
+        return _auth.currentUser != null;
+      }
+    } catch (e) {
+      print("❌ Error checking user login status: $e");
+    }
+    return false;
   }
 
-
-  // Get user profile details
+  // Get user profile details safely
   Map<String, dynamic>? getUserProfile() {
     User? user = _auth.currentUser;
     if (user != null) {
       return {
         "uid": user.uid,
-        "email": user.email,
-        "displayName": user.displayName,
-        "photoURL": user.photoURL,
+        "email": user.email ?? "No email",
+        "displayName": user.displayName ?? "No name",
+        "photoURL": user.photoURL ?? "No profile picture",
       };
     }
     return null;

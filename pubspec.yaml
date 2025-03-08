@@ -11,10 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  firebase_core: ^2.24.0   # ✅ Compatible with Firebase services
-  firebase_auth: ^4.15.0   # ✅ Required for authentication
-  firebase_database: 10.5.7  # ✅ Downgrade to match firebase_core
-  google_sign_in: ^6.2.1
+  firebase_core: ^2.32.0   # ✅ Compatible with Firebase services
+  firebase_auth: ^4.17.0   # ✅ Required for authentication
+  firebase_database: ^10.5.7  # ✅ Downgrade to match firebase_core
+  google_sign_in: ^6.1.5
   fl_chart: ^0.70.2
   google_fonts: ^6.1.0
   intl: ^0.18.0

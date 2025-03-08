@@ -8,36 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1095630927305:android:3aaa9ac90180e3c4262418",
-        "android_client_info": {
-          "package_name": "com.android.application"
-        }
-      },
-      "oauth_client": [
-        
-        {
-          "client_id": "1095630927305-q8kunj7l83735ekf1on1q1cb0v8psu7r.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAU4aQ_JKXrcXoIJYioKiC5iOoBzWGOn0k"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1095630927305-q8kunj7l83735ekf1on1q1cb0v8psu7r.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:1095630927305:android:856b933cba9c56dd262418",
         "android_client_info": {
           "package_name": "com.example.flutter_application_1"
@@ -45,42 +15,13 @@
       },
       "oauth_client": [
         {
-          "client_id": "1095630927305-suhpcngrsh7po0mtovtromk9u12m3r30.apps.googleusercontent.com",
+          "client_id": "1095630927305-9qfr9g7o91qfbfjthk6kms01e99o94ok.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.flutter_application_1",
-            "certificate_hash": "71c69ac59297abdde817aa5857283328f76828fe"
+            "certificate_hash": "a58401a129a8c17f05b52b6d26dd1a495d3dc6bb"
           }
         },
-        {
-          "client_id": "1095630927305-q8kunj7l83735ekf1on1q1cb0v8psu7r.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAU4aQ_JKXrcXoIJYioKiC5iOoBzWGOn0k"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1095630927305-q8kunj7l83735ekf1on1q1cb0v8psu7r.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1095630927305:android:92be185959ce1909262418",
-        "android_client_info": {
-          "package_name": "tank.track"
-        }
-      },
-      "oauth_client": [
         {
           "client_id": "1095630927305-q8kunj7l83735ekf1on1q1cb0v8psu7r.apps.googleusercontent.com",
           "client_type": 3

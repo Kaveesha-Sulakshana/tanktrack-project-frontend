@@ -20,13 +20,26 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchData();
+
+    // Show success message when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("✅ Google Sign-In successful!"),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    });
   }
 
   void _fetchData() {
     dbRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
         setState(() {
-          tankPercentage = double.parse(event.snapshot.child('percentage').value.toString());
+          tankPercentage = double.parse(
+            event.snapshot.child('percentage').value.toString(),
+          );
         });
       }
     });
@@ -52,21 +65,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-  decoration: const BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: RadialGradient(
             radius: 1.2,
-            colors: [
-              Color(0xFF011D47),
-              Color(0xFF00050B),
-              Color(0xFF00060E),
-            ],
+            colors: [Color(0xFF011D47), Color(0xFF00050B), Color(0xFF00060E)],
             stops: [0.0, 1.0, 1.0],
           ),
         ),
-
-
-
-
         child: SafeArea(
           child: Column(
             children: [
@@ -92,7 +97,11 @@ class _HomeScreenState extends State<HomeScreen> {
           Image.asset('assets/logomark.png', height: 40),
           const Text(
             "Home",
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           const Icon(Icons.notifications, color: Colors.white),
         ],
@@ -102,51 +111,67 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // 🔹 User Welcome Card
   Widget _buildUserCard() {
-  String todayDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-    child: Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(15),
+    String todayDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Pushes content apart
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  todayDate,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  "Welcome Back",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  "User",
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const Icon(
+              Icons.account_circle,
+              size: 80,
+              color: Colors.white,
+            ), // Moves icon to right
+          ],
+        ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pushes content apart
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                todayDate,
-                style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 16),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                "Welcome Back",
-                style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                "User",
-                style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const Icon(Icons.account_circle, size: 80, color: Colors.white), // Moves icon to right
-        ],
-      ),
-    ),
-  );
-}
-
+    );
+  }
 
   // 🔹 Tank Level Circular Indicator
   Widget _buildTankIndicator() {
     Color getColor(double percentage) {
       if (percentage <= 20) return const Color(0xFF66FF66); // Light Green
       if (percentage <= 40) return const Color(0xFF00C49A); // Green
-      if (percentage <= 60) return const Color.fromARGB(255, 255, 234, 172); // Yellow
+      if (percentage <= 60)
+        return const Color.fromARGB(255, 255, 234, 172); // Yellow
       if (percentage <= 80) return const Color(0xFFFF9800); // Orange
       return const Color(0xFFFF3D00); // Red
     }
@@ -187,10 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'assets/logomark.png',
-                        height: 100,
-                      ),
+                      Image.asset('assets/logomark.png', height: 100),
                       const SizedBox(height: 5),
                       const Text(
                         "Tap here",
