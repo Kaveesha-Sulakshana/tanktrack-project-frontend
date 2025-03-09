@@ -22,14 +22,12 @@ class AuthService {
     }
   }
 
-  // Google Sign-In (Fixed Type Mismatch Error)
+  // Google Sign-In (Returns User, Not String)
   Future<User?> signInWithGoogle() async {
     try {
-      // Ensure previous sessions are signed out
-      await _googleSignIn.signOut();
+      await _googleSignIn.signOut(); // Ensure clean login session
 
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
         print("⚠️ Google Sign-In was cancelled by the user.");
@@ -44,10 +42,9 @@ class AuthService {
         idToken: googleAuth.idToken,
       );
 
-      // Sign in with Firebase
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(credential);
-
+      UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
       User? user = userCredential.user;
 
       if (user != null) {
@@ -57,19 +54,11 @@ class AuthService {
         print("User Name: ${user.displayName}");
         print("User Photo: ${user.photoURL}");
 
-        // Reload user to confirm existence in Firebase
-        await user.reload();
-        User? refreshedUser = FirebaseAuth.instance.currentUser;
+        // Retrieve Firebase ID Token
+        String? firebaseToken = await getFirebaseToken();
+        print("🔥 Firebase ID Token: $firebaseToken");
 
-        if (refreshedUser == null) {
-          print(
-            "❌ User record not found in Firebase after sign-in. Signing out.",
-          );
-          await signOut();
-          return null;
-        }
-
-        return refreshedUser;
+        return user; // Return the user instead of token
       } else {
         print("❌ Google Sign-In failed: No user found.");
         return null;
@@ -83,7 +72,20 @@ class AuthService {
     }
   }
 
-  // Logout (Ensures Google & Firebase sign out)
+  // Get Firebase ID Token
+  Future<String?> getFirebaseToken() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      String? token = await user.getIdToken(true);
+      print("🔥 Firebase ID Token (Separate Request): $token");
+      return token;
+    } else {
+      print("❌ No user logged in.");
+      return null;
+    }
+  }
+
+  // Logout
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();
@@ -99,12 +101,12 @@ class AuthService {
     return _auth.currentUser;
   }
 
-  // Check if user is logged in (Handles session reload properly)
+  // Check if user is logged in
   Future<bool> isUserLoggedIn() async {
     try {
       User? user = _auth.currentUser;
       if (user != null) {
-        await user.reload(); // Only reload if user exists
+        await user.reload();
         return _auth.currentUser != null;
       }
     } catch (e) {
