@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'emergency_screen.dart';
+import 'premium_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -83,31 +84,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          _buildSettingsTile(Icons.person, "Account settings"),
-          _buildSettingsTile(Icons.wifi, "Wi-Fi configuration"),
-          _buildSettingsTile(Icons.notifications, "Notification settings"),
-          _buildSettingsTile(Icons.star, "Premium features"),
-          _buildSettingsTile(Icons.call, "Contact us"),
-          _buildSettingsTile(Icons.group, "Meet the team"),
+          _buildSettingsTile(Icons.person, "Account settings", null),
+          _buildSettingsTile(Icons.wifi, "Wi-Fi configuration", null),
+          _buildSettingsTile(Icons.notifications, "Notification settings", null),
+          _buildSettingsTile(Icons.star, "Premium features", PremiumScreen()),
+          _buildSettingsTile(Icons.call, "Contact us", null),
+          _buildSettingsTile(Icons.group, "Meet the team", null),
         ],
       ),
     );
   }
 
-  Widget _buildSettingsTile(IconData icon, String title) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.green, size: 24),
-          const SizedBox(width: 15),
-          Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
-        ],
+  Widget _buildSettingsTile(IconData icon, String title, Widget? destination) {
+    return GestureDetector(
+      onTap: () {
+        if (destination != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => destination),
+          );
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 15),
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.green, size: 24),
+            const SizedBox(width: 15),
+            Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+          ],
+        ),
       ),
     );
   }
