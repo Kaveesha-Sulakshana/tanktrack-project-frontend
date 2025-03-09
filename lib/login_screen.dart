@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'auth_service.dart';
 import 'home_screen.dart';
+import 'register_screen.dart'; // Import Register Screen
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,7 +24,10 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (user != null) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Login failed. Check your credentials.")),
@@ -35,11 +39,14 @@ class _LoginScreenState extends State<LoginScreen> {
     User? user = await _authService.signInWithGoogle();
 
     if (user != null) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Google Sign-In failed.")),
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Google Sign-In failed.")));
     }
   }
 
@@ -50,11 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: const BoxDecoration(
           gradient: RadialGradient(
             radius: 1.2,
-            colors: [
-              Color(0xFF011D47),
-              Color(0xFF00050B),
-              Color(0xFF00060E),
-            ],
+            colors: [Color(0xFF011D47), Color(0xFF00050B), Color(0xFF00060E)],
             stops: [0.0, 1.0, 1.0],
           ),
         ),
@@ -87,14 +90,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Text(
                         "Enter your login information",
-                        style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
                       ),
                       const SizedBox(height: 20),
                       TextField(
                         controller: emailController,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.email, color: Colors.white),
+                          prefixIcon: const Icon(
+                            Icons.email,
+                            color: Colors.white,
+                          ),
                           hintText: "Email",
                           hintStyle: const TextStyle(color: Colors.white54),
                         ),
@@ -105,7 +114,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         obscureText: true,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.lock, color: Colors.white),
+                          prefixIcon: const Icon(
+                            Icons.lock,
+                            color: Colors.white,
+                          ),
                           hintText: "Password",
                           hintStyle: const TextStyle(color: Colors.white54),
                         ),
@@ -117,7 +129,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           minimumSize: const Size(350, 50),
                         ),
                         onPressed: _signInWithEmail,
-                        child: const Text("LOGIN", style: TextStyle(color: Colors.white)),
+                        child: const Text(
+                          "LOGIN",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton(
@@ -129,11 +144,49 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image(image: AssetImage('assets/google_logo.png'), height: 50),
+                            Image(
+                              image: AssetImage('assets/google_logo.png'),
+                              height: 50,
+                            ),
                             SizedBox(width: 10),
-                            Text("Sign in with Google", style: TextStyle(color: Colors.black)),
+                            Text(
+                              "Sign in with Google",
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ],
                         ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Don't have an account? ",
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              color: Colors.white70,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const RegisterScreen(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "Register now",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    Colors.blue, // Make it blue and clickable
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
