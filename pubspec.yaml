@@ -34,6 +34,7 @@ flutter:
     - assets/service2.png
     - assets/service3.png
     - assets/service4.png
+    - assets/premium.png
 
 flutter_icons:
   android: true
