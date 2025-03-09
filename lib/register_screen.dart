@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -21,14 +23,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool isChecked = false;
   bool showErrorMessage = false;
+  bool isLoading = false;
+  String errorMessage = '';
 
-  void _validateAndSubmit() {
-    if (_formKey.currentState!.validate()) {
-      // Proceed with registration
-      Navigator.pop(context);
-    } else {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void _registerUser() async {
+    if (!_formKey.currentState!.validate()) {
       setState(() {
         showErrorMessage = true;
+        errorMessage = "Fill all fields correctly";
+      });
+      return;
+    }
+
+    if (passwordController.text != confirmPasswordController.text) {
+      setState(() {
+        errorMessage = "Passwords do not match";
+      });
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      // Navigate to home screen or show success message
+      Navigator.pop(context);
+    } catch (error) {
+      setState(() {
+        errorMessage = "Registration failed: ${error.toString()}";
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
       });
     }
   }
@@ -137,11 +172,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ],
                           ),
-                          if (showErrorMessage)
+                          if (errorMessage.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: Text(
-                                "Fill these fields",
+                                errorMessage,
                                 style: GoogleFonts.poppins(
                                   color: Colors.red,
                                   fontSize: 14,
@@ -158,12 +193,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 borderRadius: BorderRadius.circular(11),
                               ),
                             ),
-                            onPressed:
-                                _isFormFilled() ? _validateAndSubmit : null,
-                            child: const Text(
-                              "REGISTER",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                            onPressed: _isFormFilled() ? _registerUser : null,
+                            child:
+                                isLoading
+                                    ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                    : const Text(
+                                      "REGISTER",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                           ),
                         ],
                       ),
@@ -197,17 +236,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           borderSide: const BorderSide(color: Colors.white60),
         ),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "This field is required";
-        }
-        return null;
-      },
-      onChanged: (value) {
-        setState(() {
-          showErrorMessage = false;
-        });
-      },
+      validator:
+          (value) =>
+              value == null || value.isEmpty ? "This field is required" : null,
     );
   }
 
