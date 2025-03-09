@@ -20,17 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchData();
-
-    // Show success message when screen loads
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("✅ Google Sign-In successful!"),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
-      );
-    });
   }
 
   void _fetchData() {
@@ -122,8 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceBetween, // Pushes content apart
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,11 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            const Icon(
-              Icons.account_circle,
-              size: 80,
-              color: Colors.white,
-            ), // Moves icon to right
+            const Icon(Icons.account_circle, size: 80, color: Colors.white),
           ],
         ),
       ),
@@ -244,13 +228,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔹 Bottom Navigation Bar (Fixed Navigation Highlight)
+  // 🔹 Bottom Navigation Bar
   Widget _buildBottomNavigationBar() {
     return BottomNavigationBar(
       backgroundColor: Colors.black,
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.white54,
-      currentIndex: _selectedIndex, // Highlight selected tab
+      currentIndex: _selectedIndex,
       onTap: _onItemTapped,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
