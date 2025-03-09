@@ -154,8 +154,9 @@ class _HomeScreenState extends State<HomeScreen> {
     Color getColor(double percentage) {
       if (percentage <= 20) return const Color(0xFF66FF66); // Light Green
       if (percentage <= 40) return const Color(0xFF00C49A); // Green
-      if (percentage <= 60)
+      if (percentage <= 60) {
         return const Color.fromARGB(255, 255, 234, 172); // Yellow
+      }
       if (percentage <= 80) return const Color(0xFFFF9800); // Orange
       return const Color(0xFFFF3D00); // Red
     }
