@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -28,7 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void _registerUser() async {
+  Future<void> _registerUser() async {
     if (!_formKey.currentState!.validate()) {
       setState(() {
         showErrorMessage = true;
@@ -50,9 +51,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+      // Register user in Firebase Authentication
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim(),
+          );
+
+      // Send data to MongoDB
+      await _sendDataToMongoDB(
+        firstNameController.text.trim(),
+        lastNameController.text.trim(),
+        emailController.text.trim(),
+        passwordController.text.trim(),
       );
 
       // Navigate to home screen or show success message
@@ -65,6 +76,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  Future<void> _sendDataToMongoDB(
+    String firstName,
+    String lastName,
+    String email,
+    String password,
+  ) async {
+    const String apiUrl =
+        "http://10.0.2.2:8080/auth/register"; // Use this for emulator
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "firstName": firstName,
+          "lastName": lastName,
+          "email": email,
+          "password": password,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("User registered successfully in MongoDB");
+      } else {
+        print("Failed to register user in MongoDB: ${response.body}");
+      }
+    } catch (e) {
+      print("Error sending data to MongoDB: $e");
     }
   }
 
