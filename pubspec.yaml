@@ -36,6 +36,9 @@ flutter:
     - assets/loginlogo.png
     - assets/otplogo.png 
     - assets/google_logo.png
+    - assets/truck.png
+    - assets/wificonfig.png
+    
 
 flutter_icons:
   android: true
