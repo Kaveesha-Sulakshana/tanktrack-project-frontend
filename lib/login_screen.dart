@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'auth_service.dart';
 import 'home_screen.dart';
 import 'register_screen.dart'; // Import Register Screen
@@ -39,6 +41,12 @@ class _LoginScreenState extends State<LoginScreen> {
     User? user = await _authService.signInWithGoogle();
 
     if (user != null) {
+      String? idToken = await user.getIdToken();
+      print("Google Sign-In Token: $idToken"); // Print token to console
+
+      // Send token to backend
+      await _sendTokenToBackend(idToken!);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -47,6 +55,28 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Google Sign-In failed.")));
+    }
+  }
+
+  Future<void> _sendTokenToBackend(String token) async {
+    const String backendUrl = "http://10.0.2.2:8080/auth/google-login";
+    try {
+      final response = await http.post(
+        Uri.parse(backendUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token', // Use Bearer token authentication
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("✅ Token successfully sent to backend.");
+      } else {
+        print("❌ Failed to send token. Status Code: ${response.statusCode}");
+        print("Response: ${response.body}");
+      }
+    } catch (e) {
+      print("🚨 Error sending token to backend: $e");
     }
   }
 
@@ -181,8 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color:
-                                    Colors.blue, // Make it blue and clickable
+                                color: Colors.blue,
                               ),
                             ),
                           ),
