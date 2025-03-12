@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -21,16 +22,34 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     _fetchUserData();
   }
 
-  void _fetchUserData() {
+  void _fetchUserData() async {
     if (user != null) {
       setState(() {
         email = user!.email ?? "No Email";
-        if (user!.displayName != null) {
-          List<String> nameParts = user!.displayName!.split(" ");
+      });
+
+      // Try to get display name from Firebase Authentication
+      if (user!.displayName != null && user!.displayName!.isNotEmpty) {
+        List<String> nameParts = user!.displayName!.split(" ");
+        setState(() {
           firstName = nameParts.isNotEmpty ? nameParts[0] : "";
           lastName = nameParts.length > 1 ? nameParts[1] : "";
+        });
+      } else {
+        // If display name is null, fetch from Firestore
+        DocumentSnapshot userDoc =
+            await FirebaseFirestore.instance
+                .collection("users")
+                .doc(user!.uid)
+                .get();
+
+        if (userDoc.exists) {
+          setState(() {
+            firstName = userDoc["firstName"];
+            lastName = userDoc["lastName"];
+          });
         }
-      });
+      }
     }
   }
 

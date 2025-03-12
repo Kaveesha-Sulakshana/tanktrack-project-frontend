@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'home_screen.dart';
 import 'account_settings_screen.dart';
+import 'login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -63,6 +65,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingsTile(Icons.star, "Premium features"),
           _buildSettingsTile(Icons.call, "Contact us"),
           _buildSettingsTile(Icons.group, "Meet the team"),
+          const SizedBox(height: 20),
+          _buildLogoutButton(), // ✅ Logout button added
         ],
       ),
     );
@@ -99,6 +103,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildLogoutButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.redAccent,
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        onPressed: _logout, // ✅ Logout function call
+        child: const Text(
+          "Logout",
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut(); // ✅ Ensure user is signed out
+
+      // ✅ Immediately navigate to login screen and remove history
+      Future.delayed(Duration.zero, () {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ), // Redirect to Login
+          (route) => false, // Removes all previous routes
+        );
+      });
+    } catch (e) {
+      print("Error during logout: $e");
+    }
   }
 
   Widget _buildBottomNavigationBar() {

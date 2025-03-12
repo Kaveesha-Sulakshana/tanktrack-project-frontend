@@ -20,41 +20,54 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   void _signInWithEmail() async {
-    User? user = await _authService.signInWithEmail(
-      emailController.text.trim(),
-      passwordController.text.trim(),
-    );
-
-    if (user != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+    try {
+      User? user = await _authService.signInWithEmail(
+        emailController.text.trim(),
+        passwordController.text.trim(),
       );
-    } else {
+
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Login failed. Check your credentials."),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error logging in: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Login failed. Check your credentials.")),
+        const SnackBar(content: Text("Error logging in. Please try again.")),
       );
     }
   }
 
   void _signInWithGoogle() async {
-    User? user = await _authService.signInWithGoogle();
+    try {
+      User? user = await _authService.signInWithGoogle();
 
-    if (user != null) {
-      String? idToken = await user.getIdToken();
-      print("Google Sign-In Token: $idToken"); // Print token to console
+      if (user != null) {
+        String? idToken = await user.getIdToken();
+        print("Google Sign-In Token: $idToken"); // Print token to console
 
-      // Send token to backend
-      await _sendTokenToBackend(idToken!);
+        // Send token to backend
+        await _sendTokenToBackend(idToken!);
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Google Sign-In failed.")));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Google Sign-In failed.")));
+      }
+    } catch (e) {
+      print("Google Sign-In Error: $e");
     }
   }
 
@@ -96,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 80),
+                const SizedBox(height: 50),
                 Text(
                   "LOGIN TO\nYOUR ACCOUNT",
                   textAlign: TextAlign.center,
@@ -107,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Image.asset("assets/loginlogo.png", width: 150),
+                Image.asset("assets/loginlogo.png", width: 120),
                 const SizedBox(height: 20),
                 Container(
                   padding: const EdgeInsets.all(20),
@@ -128,6 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 20),
                       TextField(
                         controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           prefixIcon: const Icon(
@@ -136,6 +150,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           hintText: "Email",
                           hintStyle: const TextStyle(color: Colors.white54),
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.1),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -150,6 +169,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           hintText: "Password",
                           hintStyle: const TextStyle(color: Colors.white54),
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.1),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -157,11 +181,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF3B43D6),
                           minimumSize: const Size(350, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                         onPressed: _signInWithEmail,
                         child: const Text(
                           "LOGIN",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -169,6 +196,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           minimumSize: const Size(350, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                         onPressed: _signInWithGoogle,
                         child: const Row(
@@ -176,12 +206,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             Image(
                               image: AssetImage('assets/google_logo.png'),
-                              height: 50,
+                              height: 24,
                             ),
                             SizedBox(width: 10),
                             Text(
                               "Sign in with Google",
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                              ),
                             ),
                           ],
                         ),
@@ -217,6 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 10),
                     ],
                   ),
                 ),
