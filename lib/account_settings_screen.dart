@@ -13,9 +13,9 @@ class AccountSettingsScreen extends StatefulWidget {
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
 
-  String firstName = "";
-  String lastName = "";
-  String email = "";
+  String firstName = "Loading...";
+  String lastName = "Loading...";
+  String email = "Loading...";
 
   @override
   void initState() {
@@ -30,22 +30,35 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       });
 
       try {
+        String? token = await user!.getIdToken(); // ✅ Fetch Firebase token
+        print("🔥 Firebase Token: $token"); // Debugging Token
+
         final response = await http.get(
           Uri.parse(
-            "http://10.0.2.2:8080/auth/user/${user!.uid}",
-          ), // ✅ Correct API
+            "http://10.0.2.2:8080/auth/user?email=${user!.email}",
+          ), // ✅ Updated MongoDB API
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer ${await user!.getIdToken()}", // If needed
+            "Authorization":
+                "Bearer $token", // ✅ Added Firebase Authentication Token
           },
         );
 
+        print("Response Status: ${response.statusCode}");
+        print("Response Body: ${response.body}");
+
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
-          setState(() {
-            firstName = data["firstName"] ?? "N/A";
-            lastName = data["lastName"] ?? "N/A";
-          });
+
+          if (data != null && data.isNotEmpty) {
+            setState(() {
+              firstName = data["firstName"] ?? "N/A";
+              lastName = data["lastName"] ?? "N/A";
+              email = data["email"] ?? email;
+            });
+          } else {
+            print("❌ No user data found in the response.");
+          }
         } else {
           print("❌ Failed to fetch user data: ${response.body}");
         }
@@ -59,7 +72,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 18, 82, 177),
+        color: const Color.fromARGB(255, 18, 82, 177),
         child: SafeArea(
           child: Column(
             children: [
