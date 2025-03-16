@@ -56,39 +56,113 @@ Future<void> fetchReport() async {
 }
 
 
-  Future<void> generatePDF() async {
-    final pdf = pw.Document();
-    final ByteData logoBytes = await rootBundle.load('assets/logo1.png');
-    final Uint8List logoImage = logoBytes.buffer.asUint8List();
+    // Function to generate and save PDF
+Future<void> generatePDF() async {
+  final pdf = pw.Document();
 
-    pdf.addPage(
-      pw.MultiPage(
-        build: (pw.Context context) => [
-          pw.Center(
-            child: pw.Image(pw.MemoryImage(logoImage), width: 80, height: 80),
-          ),
-          pw.SizedBox(height: 10),
-          pw.Text("TANK TRACK", style: pw.TextStyle(fontSize: 30, fontWeight: pw.FontWeight.bold)),
-          pw.SizedBox(height: 10),
-          pw.Text("Monthly Report", style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-          pw.SizedBox(height: 10),
-          pw.Table.fromTextArray(
-            headers: ["Month", "Percentage"],
-            data: reportData.entries.map((entry) => [entry.key, "${entry.value.toStringAsFixed(1)}%"]).toList(),
-            headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-            border: pw.TableBorder.all(),
-            cellAlignment: pw.Alignment.center,
-            cellStyle: pw.TextStyle(fontSize: 12),
-          ),
-        ],
-      ),
-    );
+  // ✅ Load Images from Assets
+  final ByteData logoBytes = await rootBundle.load('assets/logo1.png');
+  final Uint8List logoImage = logoBytes.buffer.asUint8List();
 
-    final output = await getExternalStorageDirectory();
-    final file = File("${output!.path}/Monthly_Report.pdf");
-    await file.writeAsBytes(await pdf.save());
-    OpenFile.open(file.path);
-  }
+  final ByteData sealBytes = await rootBundle.load('assets/seal.png');
+  final Uint8List sealImage = sealBytes.buffer.asUint8List();
+
+  pdf.addPage(
+    pw.MultiPage( // ✅ MultiPage ensures content doesn't get cut off
+      build: (pw.Context context) => [
+        // ✅ Add Logo at the Top
+        pw.Center(
+          child: pw.Image(pw.MemoryImage(logoImage), width: 80, height: 80),
+        ),
+        pw.SizedBox(height: 10),
+
+        // ✅ Title
+        pw.Center(
+          child: pw.Text("TANK TRACK",
+              style: pw.TextStyle(fontSize: 30, fontWeight: pw.FontWeight.bold)),
+        ),
+        pw.SizedBox(height: 10),
+        pw.Center(
+          child: pw.Text("Monthly Report",
+              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+        ),
+        pw.SizedBox(height: 10),
+
+        // ✅ Styled Table for Tank Data
+        pw.Table.fromTextArray(
+          headers: ["Month", "Percentage"],
+          data: reportData.entries
+              .map((entry) => [entry.key, "${entry.value.toStringAsFixed(1)}%"])
+              .toList(),
+          headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+          border: pw.TableBorder.all(),
+          cellAlignment: pw.Alignment.center,
+          cellStyle: pw.TextStyle(fontSize: 12),
+        ),
+
+        pw.SizedBox(height: 20),
+
+        // ✅ Mini Bar Graph inside PDF with Labels
+        pw.Container(
+          height: 350, // ✅ Increased height for better spacing
+          width: 400,
+          child: pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.center,
+            children: reportData.entries.map((entry) {
+              double barHeight = entry.value * 3; // ✅ Scale bars correctly
+              return pw.Column(
+                mainAxisAlignment: pw.MainAxisAlignment.end,
+                children: [
+                  // ✅ Add Percentage Labels Above Bars
+                  pw.Text("${entry.value.toStringAsFixed(1)}%",
+                      style: pw.TextStyle(fontSize: 10)),
+
+                  // ✅ Bar Graph (Ensures visibility)
+                  pw.Container(
+                    width: 30, // ✅ Increased width of bars
+                    height: barHeight < 15 ? 15 : barHeight, // ✅ Ensure minimum height
+                    color: PdfColors.blue,
+                    margin: pw.EdgeInsets.symmetric(horizontal: 4),
+                  ),
+
+                  // ✅ Add Month Labels Below Bars
+                  pw.SizedBox(height: 5),
+                  pw.Text(entry.key.substring(0, 3), // Show first 3 letters of the month
+                      style: pw.TextStyle(fontSize: 10)),
+                ],
+              );
+            }).toList(),
+          ),
+        ),
+
+        pw.SizedBox(height: 20),
+
+        // ✅ Footer: Generated Date
+        pw.Text("Generated on: ${DateTime.now()}",
+            style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+
+        pw.SizedBox(height: 30),
+
+        // ✅ Verified by Section with Seal Image (Always on the same page)
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Text("Verified by:", style: pw.TextStyle(fontSize: 16)),
+            pw.Image(pw.MemoryImage(sealImage), width: 80, height: 80), // ✅ Add Seal Image
+          ],
+        ),
+      ],
+    ),
+  );
+
+  // Save PDF file
+  final output = await getExternalStorageDirectory();
+  final file = File("${output!.path}/Monthly_Report.pdf");
+  await file.writeAsBytes(await pdf.save());
+
+  // Open the PDF
+  OpenFile.open(file.path);
+}
 
   Widget buildTankIndicator(double percentage) {
     Color tankColor = Colors.blueAccent;
