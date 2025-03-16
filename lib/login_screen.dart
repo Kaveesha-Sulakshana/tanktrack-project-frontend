@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'auth_service.dart';
 import 'home_screen.dart';
-import 'register_screen.dart'; // Import Register Screen
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -51,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (user != null) {
         String? idToken = await user.getIdToken();
-        print("Google Sign-In Token: $idToken"); // Print token to console
+        print("Google Sign-In Token: $idToken");
 
         // Send token to backend
         await _sendTokenToBackend(idToken!);
@@ -77,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Uri.parse(backendUrl),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token', // Use Bearer token authentication
+          'Authorization': 'Bearer $token',
         },
       );
 
@@ -92,11 +93,58 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // ✅ FUNCTION: Forgot Password Logic
+  Future<void> _resetPassword() async {
+    String email = emailController.text.trim();
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please enter your email")));
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Password reset link sent to email.")),
+      );
+
+      // ✅ UPDATE PASSWORD IN MONGODB
+      await _updateMongoDBPassword(email);
+    } catch (e) {
+      print("Error resetting password: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error resetting password. Try again.")),
+      );
+    }
+  }
+
+  // ✅ FUNCTION: Update Password in MongoDB after Firebase Reset
+  Future<void> _updateMongoDBPassword(String email) async {
+    const String backendUrl = "http://10.0.2.2:8080/auth/update-password";
+
+    try {
+      final response = await http.put(
+        Uri.parse(backendUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email}),
+      );
+
+      if (response.statusCode == 200) {
+        print("✅ Password updated in MongoDB.");
+      } else {
+        print("❌ Failed to update MongoDB. Status: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🚨 Error updating MongoDB: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 18, 82, 177),
+        color: const Color.fromARGB(255, 18, 82, 177),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -169,6 +217,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: _resetPassword,
+                        child: const Text(
+                          "Forgot Password?",
+                          style: TextStyle(color: Colors.yellow, fontSize: 14),
+                        ),
+                      ),
                       const SizedBox(height: 20),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -216,11 +272,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             "Don't have an account? ",
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
+                            style: TextStyle(
                               color: Colors.white70,
+                              fontSize: 14,
                             ),
                           ),
                           GestureDetector(
@@ -232,18 +288,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               );
                             },
-                            child: Text(
+                            child: const Text(
                               "Register now",
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
+                                color: Colors.yellow,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF3B43D6),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
                     ],
                   ),
                 ),
