@@ -6,6 +6,8 @@ import 'home_screen.dart';
 import 'settings_screen.dart';  
 
 class EmergencyScreen extends StatefulWidget {
+  const EmergencyScreen({super.key});
+
   @override
   _EmergencyScreenState createState() => _EmergencyScreenState();
 }
@@ -22,7 +24,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
   }
 
   Future<void> fetchEmergencyServices() async {
-    final url = Uri.parse("http://172.20.10.2:8080/api/services");
+    final url = Uri.parse("http://10.0.2.2:8080/api/services");
 
     try {
       final response = await http.get(url);
