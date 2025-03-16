@@ -1,6 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -22,33 +23,34 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     _fetchUserData();
   }
 
-  void _fetchUserData() async {
+  Future<void> _fetchUserData() async {
     if (user != null) {
       setState(() {
         email = user!.email ?? "No Email";
       });
 
-      // Try to get display name from Firebase Authentication
-      if (user!.displayName != null && user!.displayName!.isNotEmpty) {
-        List<String> nameParts = user!.displayName!.split(" ");
-        setState(() {
-          firstName = nameParts.isNotEmpty ? nameParts[0] : "";
-          lastName = nameParts.length > 1 ? nameParts[1] : "";
-        });
-      } else {
-        // If display name is null, fetch from Firestore
-        DocumentSnapshot userDoc =
-            await FirebaseFirestore.instance
-                .collection("users")
-                .doc(user!.uid)
-                .get();
+      try {
+        final response = await http.get(
+          Uri.parse(
+            "http://10.0.2.2:8080/auth/user/${user!.uid}",
+          ), // ✅ Correct API
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer ${await user!.getIdToken()}", // If needed
+          },
+        );
 
-        if (userDoc.exists) {
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
           setState(() {
-            firstName = userDoc["firstName"];
-            lastName = userDoc["lastName"];
+            firstName = data["firstName"] ?? "N/A";
+            lastName = data["lastName"] ?? "N/A";
           });
+        } else {
+          print("❌ Failed to fetch user data: ${response.body}");
         }
+      } catch (e) {
+        print("❌ Error fetching user data: $e");
       }
     }
   }
@@ -57,13 +59,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            radius: 1.5,
-            colors: [Color(0xFF021B40), Color(0xFF000611)],
-            stops: [0.2, 1.0],
-          ),
-        ),
+        color: Color.fromARGB(255, 18, 82, 177),
         child: SafeArea(
           child: Column(
             children: [
@@ -152,7 +148,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         ),
         const SizedBox(height: 5),
         Container(
-          width: double.infinity, // Ensures all fields have the same width
+          width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.2),
@@ -175,7 +171,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.redAccent,
+            backgroundColor: Colors.blue,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

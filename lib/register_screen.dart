@@ -123,13 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            radius: 1.2,
-            colors: [Color(0xFF011D47), Color(0xFF00050B), Color(0xFF00060E)],
-            stops: [0.0, 1.0, 1.0],
-          ),
-        ),
+        color: Color.fromARGB(255, 18, 82, 177),
         child: Center(
           child: SingleChildScrollView(
             child: Form(
@@ -162,7 +156,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.07),
+                        color: Colors.white.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(19),
                       ),
                       child: Column(
@@ -272,7 +266,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         hintText: hint,
         hintStyle: const TextStyle(color: Colors.white54),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.12),
+        fillColor: Colors.white.withOpacity(0.2),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(11),
           borderSide: const BorderSide(color: Colors.white60),

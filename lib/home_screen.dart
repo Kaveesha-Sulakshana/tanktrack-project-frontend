@@ -54,13 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            radius: 1.2,
-            colors: [Color(0xFF011D47), Color(0xFF00050B), Color(0xFF00060E)],
-            stops: [0.0, 1.0, 1.0],
-          ),
-        ),
+        color: Color.fromARGB(255, 18, 82, 177),
         child: SafeArea(
           child: Column(
             children: [
@@ -107,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withOpacity(0.5),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
@@ -119,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   todayDate,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withOpacity(1),
                     fontSize: 16,
                   ),
                 ),
@@ -127,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Text(
                   "Welcome Back",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 2, 46, 111),
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -135,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Text(
                   "User",
                   style: TextStyle(
-                    color: Colors.green,
+                    color: Color.fromARGB(255, 2, 46, 111),
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -152,13 +146,13 @@ class _HomeScreenState extends State<HomeScreen> {
   // 🔹 Tank Level Circular Indicator
   Widget _buildTankIndicator() {
     Color getColor(double percentage) {
-      if (percentage <= 20) return const Color(0xFF66FF66); // Light Green
-      if (percentage <= 40) return const Color(0xFF00C49A); // Green
+      if (percentage <= 20) return const Color(0xFF00FF00); // Bright Neon Green
+      if (percentage <= 40) return const Color(0xFF00E676); // Bright Green
       if (percentage <= 60) {
-        return const Color.fromARGB(255, 255, 234, 172); // Yellow
+        return const Color(0xFFFFEB3B); // Bright Yellow
       }
-      if (percentage <= 80) return const Color(0xFFFF9800); // Orange
-      return const Color(0xFFFF3D00); // Red
+      if (percentage <= 80) return const Color(0xFFFF5722); // Bright Orange
+      return const Color(0xFFD50000); // Bright Red
     }
 
     return Column(
@@ -170,6 +164,13 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
             fontSize: 24,
             fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                blurRadius: 4.0,
+                color: Colors.black45,
+                offset: Offset(2, 2),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 30),
@@ -184,20 +185,31 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
+                  Container(
+                    height: 270,
+                    width: 270,
+                    decoration: BoxDecoration(shape: BoxShape.circle),
+                  ),
                   SizedBox(
                     height: 260,
                     width: 260,
                     child: CircularProgressIndicator(
                       value: animatedValue / 100,
                       strokeWidth: 18,
-                      backgroundColor: Colors.white.withOpacity(0.3),
+                      backgroundColor: Colors.white.withOpacity(0.1),
                       valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                      strokeCap: StrokeCap.round,
                     ),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/logomark.png', height: 100),
+                      Image.asset(
+                        'assets/logomark.png',
+                        height: 100,
+                        color: Colors.white,
+                        colorBlendMode: BlendMode.srcATop,
+                      ),
                       const SizedBox(height: 5),
                       const Text(
                         "Tap here",
@@ -217,6 +229,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: progressColor,
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 5.0,
+                            color: Colors.black45,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -232,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // 🔹 Bottom Navigation Bar
   Widget _buildBottomNavigationBar() {
     return BottomNavigationBar(
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromARGB(255, 9, 38, 82),
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.white54,
       currentIndex: _selectedIndex,
@@ -251,9 +270,9 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       child: Container(
         width: double.infinity,
-        height: 100,
+        height: 150,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withOpacity(0.5),
           borderRadius: BorderRadius.circular(15),
         ),
       ),

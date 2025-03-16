@@ -8,17 +8,7 @@ class WifiConfigurationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            radius: 1.2,
-            colors: [
-              Color(0xFF011D47),
-              Color(0xFF00050B),
-              Color(0xFF00060E),
-            ],
-            stops: [0.0, 1.0, 1.0],
-          ),
-        ),
+        color: Color.fromARGB(255, 18, 82, 177),
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +54,10 @@ class WifiConfigurationScreen extends StatelessWidget {
                       onPressed: () {
                         // Handle save action
                       },
-                      child: const Text("Save", style: TextStyle(color: Colors.white)),
+                      child: const Text(
+                        "Save",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),

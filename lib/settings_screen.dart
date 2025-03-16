@@ -18,13 +18,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            radius: 1.2,
-            colors: [Color(0xFF011D47), Color(0xFF00050B), Color(0xFF00060E)],
-            stops: [0.0, 1.0, 1.0],
-          ),
-        ),
+        color: Color.fromARGB(255, 18, 82, 177),
         child: SafeArea(
           child: Column(children: [_buildAppBar(), _buildSettingsList()]),
         ),
@@ -88,12 +82,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         margin: const EdgeInsets.only(bottom: 15),
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withOpacity(0.5),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.green, size: 24),
+            Icon(icon, color: const Color.fromARGB(255, 18, 82, 177), size: 24),
             const SizedBox(width: 15),
             Text(
               title,

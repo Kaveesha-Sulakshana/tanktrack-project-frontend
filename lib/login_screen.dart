@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'auth_service.dart';
 import 'home_screen.dart';
 import 'register_screen.dart'; // Import Register Screen
@@ -97,13 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            radius: 1.2,
-            colors: [Color(0xFF011D47), Color(0xFF00050B), Color(0xFF00060E)],
-            stops: [0.0, 1.0, 1.0],
-          ),
-        ),
+        color: Color.fromARGB(255, 18, 82, 177),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -126,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(20),
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.07),
+                    color: Colors.white.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(19),
                   ),
                   child: Column(
@@ -151,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: "Email",
                           hintStyle: const TextStyle(color: Colors.white54),
                           filled: true,
-                          fillColor: Colors.white.withOpacity(0.1),
+                          fillColor: Colors.white.withOpacity(0.3),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -170,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: "Password",
                           hintStyle: const TextStyle(color: Colors.white54),
                           filled: true,
-                          fillColor: Colors.white.withOpacity(0.1),
+                          fillColor: Colors.white.withOpacity(0.3),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -244,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.blue,
+                                color: Color(0xFF3B43D6),
                               ),
                             ),
                           ),

@@ -8,17 +8,7 @@ class TankConfigurationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            radius: 1.2,
-            colors: [
-              Color(0xFF011D47),
-              Color(0xFF00050B),
-              Color(0xFF00060E),
-            ],
-            stops: [0.0, 1.0, 1.0],
-          ),
-        ),
+        color: Color.fromARGB(255, 18, 82, 177),
         child: SafeArea(
           child: Center(
             child: Column(
@@ -68,9 +58,15 @@ class TankConfigurationScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          _buildTextField("Enter the depth of your tank", "Depth of your tank (meters)"),
+          _buildTextField(
+            "Enter the depth of your tank",
+            "Depth of your tank (meters)",
+          ),
           const SizedBox(height: 20),
-          _buildTextField("Enter the distance between sensor and the overflow pipe", "Distance (meters)"),
+          _buildTextField(
+            "Enter the distance between sensor and the overflow pipe",
+            "Distance (meters)",
+          ),
         ],
       ),
     );
@@ -111,9 +107,7 @@ class TankConfigurationScreen extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF3B43D6),
         minimumSize: const Size(350, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(11),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
       ),
       onPressed: () {},
       child: const Text("CONFIRM", style: TextStyle(color: Colors.white)),
