@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'change_password_screen.dart'; // ✅ Import Change Password Screen
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -30,34 +31,25 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       });
 
       try {
-        String? token = await user!.getIdToken(); // ✅ Fetch Firebase token
-        print("🔥 Firebase Token: $token"); // Debugging Token
+        String? token = await user!.getIdToken();
+        print("🔥 Firebase Token: $token");
 
         final response = await http.get(
-          Uri.parse(
-            "http://10.0.2.2:8080/auth/user?email=${user!.email}",
-          ), // ✅ Updated MongoDB API
+          Uri.parse("http://10.0.2.2:8080/auth/user?email=${user!.email}"),
           headers: {
             "Content-Type": "application/json",
-            "Authorization":
-                "Bearer $token", // ✅ Added Firebase Authentication Token
+            "Authorization": "Bearer $token",
           },
         );
 
-        print("Response Status: ${response.statusCode}");
-        print("Response Body: ${response.body}");
-
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
-
           if (data != null && data.isNotEmpty) {
             setState(() {
               firstName = data["firstName"] ?? "N/A";
               lastName = data["lastName"] ?? "N/A";
               email = data["email"] ?? email;
             });
-          } else {
-            print("❌ No user data found in the response.");
           }
         } else {
           print("❌ Failed to fetch user data: ${response.body}");
@@ -82,7 +74,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               const SizedBox(height: 20),
               _buildAccountDetails(),
               const SizedBox(height: 30),
-              _buildChangePasswordButton(),
+              _buildChangePasswordButton(), // ✅ Button to go to Change Password Screen
             ],
           ),
         ),
@@ -191,7 +183,14 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             ),
           ),
           onPressed: () {
-            // Implement password change later
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) =>
+                        const ChangePasswordScreen(), // ✅ Navigates to Change Password
+              ),
+            );
           },
           child: const Text(
             "Change Your Password",
