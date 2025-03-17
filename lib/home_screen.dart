@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'settings_screen.dart';
 import 'package:intl/intl.dart';
+import 'monthly_report.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -204,19 +205,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'assets/logomark.png',
-                        height: 100,
-                        color: Colors.white,
-                        colorBlendMode: BlendMode.srcATop,
-                      ),
+                      Image.asset('assets/logomark.png', height: 100),
                       const SizedBox(height: 5),
-                      const Text(
-                        "Tap here",
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MonthlyReportScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Tap here",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
