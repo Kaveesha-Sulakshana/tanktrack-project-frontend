@@ -39,6 +39,7 @@ flutter:
     - assets/service4.png
     - assets/premium.png
     - assets/seal.png
+    - assets/ttlog.png
 
 flutter_icons:
   android: true
