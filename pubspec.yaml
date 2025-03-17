@@ -39,6 +39,7 @@ flutter:
     - assets/google_logo.png
     - assets/truck.png
     - assets/wificonfig.png
+    - assets/ttlog.png
     
 
 flutter_icons:
