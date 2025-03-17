@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'home_screen.dart';
-import 'emergency_screen.dart';
-import 'premium_screen.dart';
+import 'account_settings_screen.dart';
+import 'login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -11,51 +12,15 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  int _selectedIndex = 2; // Settings is selected by default
-
-  // Navigation function
-  void _onItemTapped(int index) {
-    if (index != _selectedIndex) {
-      setState(() {
-        _selectedIndex = index;
-      });
-
-      if (index == 0) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-      } else if (index == 1) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => EmergencyScreen()),
-        );
-      }
-    }
-  }
+  final int _selectedIndex = 2; // 0 = Home, 1 = Alerts, 2 = Settings
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            radius: 1.2,
-            colors: [
-              Color(0xFF011D47),
-              Color(0xFF00050B),
-              Color(0xFF00060E),
-            ],
-            stops: [0.0, 1.0, 1.0],
-          ),
-        ),
+        color: Color.fromARGB(255, 18, 82, 177),
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              _buildSettingsList(),
-            ],
-          ),
+          child: Column(children: [_buildAppBar(), _buildSettingsList()]),
         ),
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
@@ -71,7 +36,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Image.asset('assets/logomark.png', height: 40),
           const Text(
             "Settings",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           const Icon(Icons.notifications, color: Colors.white),
         ],
@@ -84,24 +53,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          _buildSettingsTile(Icons.person, "Account settings", null),
-          _buildSettingsTile(Icons.wifi, "Wi-Fi configuration", null),
-          _buildSettingsTile(Icons.notifications, "Notification settings", null),
-          _buildSettingsTile(Icons.star, "Premium features", PremiumScreen()),
-          _buildSettingsTile(Icons.call, "Contact us", null),
-          _buildSettingsTile(Icons.group, "Meet the team", null),
+          _buildSettingsTile(Icons.person, "Account settings"),
+          _buildSettingsTile(Icons.wifi, "Wi-Fi configuration"),
+          _buildSettingsTile(Icons.notifications, "Notification settings"),
+          _buildSettingsTile(Icons.star, "Premium features"),
+          _buildSettingsTile(Icons.call, "Contact us"),
+          _buildSettingsTile(Icons.group, "Meet the team"),
+          const SizedBox(height: 20),
+          _buildLogoutButton(), // ✅ Logout button added
         ],
       ),
     );
   }
 
-  Widget _buildSettingsTile(IconData icon, String title, Widget? destination) {
+  Widget _buildSettingsTile(IconData icon, String title) {
     return GestureDetector(
       onTap: () {
-        if (destination != null) {
+        if (title == "Account settings") {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => destination),
+            MaterialPageRoute(
+              builder: (context) => const AccountSettingsScreen(),
+            ),
           );
         }
       },
@@ -109,54 +82,85 @@ class _SettingsScreenState extends State<SettingsScreen> {
         margin: const EdgeInsets.only(bottom: 15),
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withOpacity(0.5),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.green, size: 24),
+            Icon(icon, color: const Color.fromARGB(255, 18, 82, 177), size: 24),
             const SizedBox(width: 15),
-            Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+            Text(
+              title,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.black, // Full-width background color
-      ),
-      child: BottomNavigationBar(
-        backgroundColor: Colors.transparent, // Keep container color
-        type: BottomNavigationBarType.fixed, // Equal spacing for icons
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white54,
-        selectedFontSize: 14,
-        unselectedFontSize: 12,
-        iconSize: 30, // Increase icon size
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        elevation: 0, // Remove shadow
-        items: [
-          const BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-          BottomNavigationBarItem(
-            icon: Container(
-              padding: const EdgeInsets.all(10), // Padding to lift the button
-              child: const Icon(
-                Icons.warning_amber_rounded, // Emergency icon
-                color: Colors.white,
-                size: 32, // Bigger size for prominence
-              ),
-            ),
-            label: "",
+  Widget _buildLogoutButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.redAccent,
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          const BottomNavigationBarItem(icon: Icon(Icons.settings), label: ""),
-        ],
+        ),
+        onPressed: _logout, // ✅ Logout function call
+        child: const Text(
+          "Logout",
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
+    );
+  }
+
+  void _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut(); // ✅ Ensure user is signed out
+
+      // ✅ Immediately navigate to login screen and remove history
+      Future.delayed(Duration.zero, () {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ), // Redirect to Login
+          (route) => false, // Removes all previous routes
+        );
+      });
+    } catch (e) {
+      print("Error during logout: $e");
+    }
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      backgroundColor: Colors.black,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.white54,
+      currentIndex: _selectedIndex, // Highlight selected tab
+      onTap: (index) {
+        if (index == 0 && _selectedIndex != 0) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
+      },
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+        BottomNavigationBarItem(icon: Icon(Icons.warning), label: "Alerts"),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
+      ],
     );
   }
 }
