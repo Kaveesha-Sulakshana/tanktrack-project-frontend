@@ -36,33 +36,31 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
 
     try {
-      String? token = await user?.getIdToken();
-      final response = await http.put(
-        Uri.parse(
-          "http://10.0.2.2:8080/auth/update-password?email=${user?.email}&Password=${oldPasswordController.text}&newPassword=${newPasswordController.text}",
-        ),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        },
+      // Re-authenticate user before changing password
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user!.email!,
+        password: oldPasswordController.text,
       );
 
-      final responseData = jsonDecode(response.body);
-      if (response.statusCode == 200 && responseData['status'] == 'success') {
-        // Update Firebase Password
-        await user?.updatePassword(newPasswordController.text);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Password updated successfully!"),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pop(context);
-      } else {
-        setState(() {
-          errorMessage = responseData['message'] ?? "Error updating password.";
-        });
-      }
+      await user!.reauthenticateWithCredential(credential);
+
+      // Update Firebase Password
+      await user!.updatePassword(newPasswordController.text);
+
+      // 🔹 Call MongoDB API to update password in backend
+      await _updateMongoDBPassword();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password updated successfully!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = _getFirebaseErrorMessage(e.code);
+      });
     } catch (e) {
       setState(() {
         errorMessage = "Error updating password: $e";
@@ -74,6 +72,52 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     });
   }
 
+  /// 🔹 Function to update the password in MongoDB
+  Future<void> _updateMongoDBPassword() async {
+    try {
+      print("Updating password in MongoDB...");
+      String? token = await user?.getIdToken();
+      final response = await http.put(
+        Uri.parse("http://10.0.2.2:8080/auth/update-mongo-password"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: jsonEncode({
+          "email": user?.email,
+          "newPassword": newPasswordController.text,
+        }),
+      );
+
+      final responseData = jsonDecode(response.body);
+      print("MongoDB Response: ${response.body}");
+
+      if (response.statusCode != 200 || responseData['status'] != 'success') {
+        throw Exception(
+          responseData['message'] ?? "Failed to update MongoDB password.",
+        );
+      }
+    } catch (e) {
+      print("MongoDB Update Failed: $e");
+      setState(() {
+        errorMessage = "MongoDB update failed: $e";
+      });
+    }
+  }
+
+  String _getFirebaseErrorMessage(String code) {
+    switch (code) {
+      case 'wrong-password':
+        return "The old password is incorrect.";
+      case 'user-not-found':
+        return "User not found. Please log in again.";
+      case 'requires-recent-login':
+        return "Please log in again before changing your password.";
+      default:
+        return "An error occurred. Please try again.";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,10 +125,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         color: const Color.fromARGB(255, 18, 82, 177),
         child: SafeArea(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start, // Aligns content to the left
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildAppBar(context), // ✅ Moves back button & title to the top
+              _buildAppBar(context),
               Expanded(
                 child: Center(
                   child: Padding(
