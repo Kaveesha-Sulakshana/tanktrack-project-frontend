@@ -164,59 +164,66 @@ Future<void> generatePDF() async {
   OpenFile.open(file.path);
 }
 
-  Widget buildTankIndicator(double percentage) {
-    Color tankColor = Colors.blueAccent;
-    if (percentage > 80) {
-      tankColor = Colors.redAccent;
-    } else if (percentage < 20) {
-      tankColor = Colors.orangeAccent;
-    }
+Widget buildTankIndicator(double percentage) {
+  Color tankColor = Colors.orangeAccent;
+  if (percentage > 80) {
+    tankColor = Colors.redAccent;
+  } else if (percentage < 20) {
+    tankColor = const Color(0xFF66FF66);
+  }
 
-    double waterHeight = 200 * (percentage / 100);
+  double waterHeight = 200 * (percentage / 100);
 
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Container(
-          width: 100,
-          height: 200,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 2),
-            borderRadius: BorderRadius.circular(16),
-            color: Colors.grey.shade800,
-          ),
+  return Stack(
+    alignment: Alignment.bottomCenter,
+    children: [
+      // Tank Container
+      Container(
+        width: 100,
+        height: 200,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white, width: 2),
+          borderRadius: BorderRadius.circular(16),
+          color: Colors.grey.shade800,
         ),
-        Positioned(
-          bottom: waterHeight - 20,
-          child: ClipPath(
-            clipper: WaveClipper(),
-            child: Container(
-              width: 100,
-              height: 40,
-              decoration: BoxDecoration(color: tankColor.withOpacity(0.9)),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 0,
-          child: Container(
+      ),
+
+      // Water Fill with Smooth Animation
+      Positioned(
+        bottom: 0,
+        child: ClipPath(
+          clipper: WaveClipper(),
+          child: AnimatedContainer(
+            duration: Duration(seconds: 2), // ✅ Smooth transition in 2 seconds
+            curve: Curves.easeInOut, // ✅ Smooth easing effect
             width: 100,
-            height: waterHeight,
+            height: waterHeight.clamp(0, 200), // ✅ Ensures water stays inside the tank
             decoration: BoxDecoration(
               color: tankColor.withOpacity(0.9),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+              ),
             ),
           ),
         ),
-        Positioned(
-          top: 10,
-          child: Text(
-            "${percentage.toStringAsFixed(1)}%",
-            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+
+      // Percentage Label
+      Positioned(
+        top: 10,
+        child: Text(
+          "${percentage.toStringAsFixed(1)}%",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 
 @override
 Widget build(BuildContext context) {
@@ -260,7 +267,6 @@ Widget build(BuildContext context) {
 
                 Expanded(
                   child: BarChart(
-                    key: ValueKey(reportData),  // ✅ FORCE REBUILD OF BARCHART
                     BarChartData(
                       maxY: 100,
                       gridData: FlGridData(show: false),
@@ -270,10 +276,7 @@ Widget build(BuildContext context) {
                           "January", "February", "March", "April", "May", "June",
                           "July", "August", "September", "October", "November", "December"
                         ];
-
-                        double percentage = reportData.containsKey(months[index])
-                            ? reportData[months[index]]!
-                            : 0.0;
+                        double percentage = reportData.containsKey(months[index]) ? reportData[months[index]]! : 0.0;
 
                         return BarChartGroupData(
                           x: index,
@@ -283,19 +286,67 @@ Widget build(BuildContext context) {
                               width: 18,
                               borderRadius: BorderRadius.circular(16),
                               gradient: LinearGradient(
-                                colors: [Colors.blueAccent, Colors.greenAccent],
+                                colors: percentage > 80 ? [Colors.redAccent, Colors.red] 
+                                      : percentage > 50 ? [Colors.orangeAccent, Colors.deepOrange] 
+                                      : [Colors.greenAccent, Colors.blueAccent],
                                 begin: Alignment.bottomCenter,
                                 end: Alignment.topCenter,
                               ),
                               backDrawRodData: BackgroundBarChartRodData(
                                 show: true,
-                                toY: 100,
-                                color: Colors.white.withOpacity(0.2),
+                                toY: 100, // ✅ This ensures empty bars show full height
+                                color: Colors.white.withOpacity(0.2), // ✅ Empty bar color before filling
                               ),
                             ),
                           ],
                         );
                       }),
+                      titlesData: FlTitlesData(
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            getTitlesWidget: (double value, TitleMeta meta) {
+                              List<String> months = [
+                                "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                                "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+                              ];
+                              return SideTitleWidget(
+                                meta: meta,
+                                child: Text(
+                                  months[value.toInt() % 12],
+                                  style: TextStyle(color: Colors.white, fontSize: 10),
+                                ),
+                              );
+                            },
+                            reservedSize: 22,
+                          ),
+                        ),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false), // ❌ Remove Left Labels
+                        ),
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false), // ❌ Remove Top Labels
+                        ),
+                        rightTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 35,
+                            getTitlesWidget: (double value, TitleMeta meta) {
+                              if (value % 10 == 0) {
+                                return SideTitleWidget(
+                                  meta: meta,
+                                  child: Text(
+                                    "${value.toInt()}",
+                                    style: TextStyle(color: Colors.white, fontSize: 12),
+                                  ),
+                                );
+                              }
+                              return Container();
+                            },
+                          ),
+                        ),
+                      ),
+                      barTouchData: BarTouchData(enabled: true),
                     ),
                   ),
                 ),
