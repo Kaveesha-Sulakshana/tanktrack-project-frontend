@@ -18,7 +18,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 18, 82, 177),
+        color: Color.fromARGB(255, 72, 66, 109),
         child: SafeArea(
           child: Column(children: [_buildAppBar(), _buildSettingsList()]),
         ),
@@ -82,16 +82,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
         margin: const EdgeInsets.only(bottom: 15),
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.5),
+          color: Color.fromARGB(156, 240, 194, 142),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
           children: [
-            Icon(icon, color: const Color.fromARGB(255, 18, 82, 177), size: 24),
+            Icon(icon, color: const Color.fromARGB(255, 49, 44, 81), size: 28),
             const SizedBox(width: 15),
             Text(
               title,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+              style: const TextStyle(color: Colors.white, fontSize: 17),
             ),
           ],
         ),
@@ -104,7 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.redAccent,
+          backgroundColor: Color.fromARGB(255, 49, 44, 81),
           padding: const EdgeInsets.symmetric(vertical: 15),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -112,10 +112,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         onPressed: _logout, // ✅ Logout function call
         child: const Text(
-          "Logout",
+          "LOGOUT",
           style: TextStyle(
-            fontSize: 16,
-            color: Colors.white,
+            fontSize: 18,
+            color: Color.fromARGB(255, 175, 73, 73),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -144,8 +144,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildBottomNavigationBar() {
     return BottomNavigationBar(
-      backgroundColor: Colors.black,
-      selectedItemColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 72, 66, 109),
+      selectedItemColor: Color.fromARGB(247, 240, 194, 142),
       unselectedItemColor: Colors.white54,
       currentIndex: _selectedIndex, // Highlight selected tab
       onTap: (index) {
