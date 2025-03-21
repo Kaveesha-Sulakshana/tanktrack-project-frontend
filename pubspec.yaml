@@ -44,6 +44,7 @@ flutter:
     - assets/truck.png
     - assets/wificonfig.png
     - assets/ttlog.png
+    - assets/seal.png
     
 
 flutter_icons:
