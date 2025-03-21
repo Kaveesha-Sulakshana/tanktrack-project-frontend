@@ -122,7 +122,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromARGB(255, 18, 82, 177),
+        color: const Color.fromARGB(255, 72, 66, 109),
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,7 +226,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
+          backgroundColor: const Color.fromARGB(247, 240, 194, 142),
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -240,7 +240,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   "Save Password",
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 72, 66, 109),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
