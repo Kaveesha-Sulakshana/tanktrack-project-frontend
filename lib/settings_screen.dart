@@ -79,7 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 15),
+        margin: const EdgeInsets.only(bottom: 15, top: 5),
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: Color.fromARGB(156, 240, 194, 142),
