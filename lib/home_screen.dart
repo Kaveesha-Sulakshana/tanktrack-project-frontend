@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'settings_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'settings_screen.dart';
 import 'monthly_report.dart';
 import 'notifications_screen.dart';
 
@@ -18,10 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int _selectedIndex = 0; // Track active bottom nav item
 
+  String firstName = "User"; // 🔹 Added for user welcome card
+
   @override
   void initState() {
     super.initState();
     _fetchData();
+    _fetchUserFirstName(); // 🔹 Fetch user's name
   }
 
   void _fetchData() {
@@ -36,6 +42,33 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> _fetchUserFirstName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        final token = await user.getIdToken();
+        final response = await http.get(
+          Uri.parse("http://10.0.2.2:8080/auth/user?email=${user.email}"),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          setState(() {
+            firstName = data["firstName"] ?? "User";
+          });
+        } else {
+          print("❌ Failed to fetch user data: ${response.body}");
+        }
+      } catch (e) {
+        print("❌ Error: $e");
+      }
+    }
+  }
+
   void _onItemTapped(int index) {
     if (index != _selectedIndex) {
       setState(() {
@@ -43,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
 
       if (index == 2) {
-        // Navigate to Settings Page
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const SettingsScreen()),
@@ -53,24 +85,32 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Color.fromARGB(255, 18, 82, 177),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              _buildUserCard(),
-              _buildTankIndicator(),
-              _buildBottomPlaceholder(),
-            ],
-          ),
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: Container(
+      color: const Color.fromARGB(255, 72, 66, 109),
+      child: SafeArea(
+        child: Column(
+          children: [
+            _buildAppBar(),
+            Expanded( 
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildUserCard(firstName),
+                    _buildTankIndicator(),
+                    _buildBottomPlaceholder(),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
-    );
-  }
+    ),
+    bottomNavigationBar: _buildBottomNavigationBar(),
+  );
+}
 
   // 🔹 Top AppBar Section
   Widget _buildAppBar() {
@@ -105,16 +145,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // 🔹 User Welcome Card
-  Widget _buildUserCard() {
+  Widget _buildUserCard(String firstName) {
     String todayDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(15),
+          color: const Color.fromARGB(247, 240, 194, 142),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 12),
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 6,
+              offset: const Offset(0, -12),
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,25 +177,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   todayDate,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(1),
+                    color: Colors.white.withOpacity(0.95),
                     fontSize: 16,
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 6),
                 const Text(
                   "Welcome Back",
                   style: TextStyle(
                     color: Color.fromARGB(255, 2, 46, 111),
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
-                  "User",
-                  style: TextStyle(
+                Text(
+                  firstName,
+                  style: const TextStyle(
                     color: Color.fromARGB(255, 2, 46, 111),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 19,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -158,13 +210,15 @@ class _HomeScreenState extends State<HomeScreen> {
   // 🔹 Tank Level Circular Indicator
   Widget _buildTankIndicator() {
     Color getColor(double percentage) {
-      if (percentage <= 20) return const Color(0xFF00FF00); // Bright Neon Green
-      if (percentage <= 40) return const Color(0xFF00E676); // Bright Green
-      if (percentage <= 60) {
-        return const Color(0xFFFFEB3B); // Bright Yellow
-      }
-      if (percentage <= 80) return const Color(0xFFFF5722); // Bright Orange
-      return const Color(0xFFD50000); // Bright Red
+      if (percentage <= 20)
+        return const Color.fromARGB(191, 0, 255, 0);
+      if (percentage <= 40)
+        return const Color.fromARGB(217, 0, 230, 119);
+      if (percentage <= 60)
+        return const Color.fromARGB(201, 249, 187, 0);
+      if (percentage <= 80)
+        return const Color.fromARGB(223, 255, 86, 34);
+      return const Color(0xFFD50000);
     }
 
     return Column(
@@ -174,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
           "Tank Summary",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 24,
+            fontSize: 27,
             fontWeight: FontWeight.bold,
             shadows: [
               Shadow(
@@ -268,8 +322,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // 🔹 Bottom Navigation Bar
   Widget _buildBottomNavigationBar() {
     return BottomNavigationBar(
-      backgroundColor: Color.fromARGB(255, 9, 38, 82),
-      selectedItemColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 72, 66, 109),
+      selectedItemColor: Color.fromARGB(247, 240, 194, 142),
       unselectedItemColor: Colors.white54,
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
@@ -289,8 +343,20 @@ class _HomeScreenState extends State<HomeScreen> {
         width: double.infinity,
         height: 150,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.5),
+          color: Color.fromARGB(255, 49, 44, 81),
           borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 12),
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 6,
+              offset: const Offset(0, -12),
+            ),
+          ],
         ),
       ),
     );
