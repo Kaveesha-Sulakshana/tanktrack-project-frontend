@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'settings_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'settings_screen.dart';
 import 'monthly_report.dart';
 import 'notifications_screen.dart';
 
@@ -18,10 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int _selectedIndex = 0; // Track active bottom nav item
 
+  String firstName = "User"; // 🔹 Added for user welcome card
+
   @override
   void initState() {
     super.initState();
     _fetchData();
+    _fetchUserFirstName(); // 🔹 Fetch user's name
   }
 
   void _fetchData() {
@@ -36,6 +42,33 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> _fetchUserFirstName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        final token = await user.getIdToken();
+        final response = await http.get(
+          Uri.parse("http://10.0.2.2:8080/auth/user?email=${user.email}"),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          setState(() {
+            firstName = data["firstName"] ?? "User";
+          });
+        } else {
+          print("❌ Failed to fetch user data: ${response.body}");
+        }
+      } catch (e) {
+        print("❌ Error: $e");
+      }
+    }
+  }
+
   void _onItemTapped(int index) {
     if (index != _selectedIndex) {
       setState(() {
@@ -43,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
 
       if (index == 2) {
-        // Navigate to Settings Page
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const SettingsScreen()),
@@ -56,14 +88,22 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 72, 66, 109),
+        color: const Color.fromARGB(255, 72, 66, 109),
         child: SafeArea(
           child: Column(
             children: [
               _buildAppBar(),
-              _buildUserCard(),
-              _buildTankIndicator(),
-              _buildBottomPlaceholder(),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _buildUserCard(firstName),
+                      _buildTankIndicator(),
+                      _buildBottomPlaceholder(),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -97,7 +137,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-            child: const Icon(Icons.notifications, color: Colors.white),
+            child: const Icon(
+              Icons.notifications,
+              color: Color.fromARGB(247, 240, 194, 142),
+            ),
           ),
         ],
       ),
@@ -105,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // 🔹 User Welcome Card
-  Widget _buildUserCard() {
+  Widget _buildUserCard(String firstName) {
     String todayDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -137,30 +180,34 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   todayDate,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.95),
-                    fontSize: 16,
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 18,
                   ),
                 ),
                 const SizedBox(height: 6),
                 const Text(
                   "Welcome Back",
                   style: TextStyle(
-                    color: Color.fromARGB(255, 2, 46, 111),
+                    color: Color.fromARGB(255, 49, 44, 81),
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
-                  "User",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 2, 46, 111),
+                Text(
+                  firstName,
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 49, 44, 81),
                     fontSize: 19,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
-            const Icon(Icons.account_circle, size: 80, color: Colors.white),
+            const Icon(
+              Icons.account_circle,
+              size: 80,
+              color: Color.fromARGB(255, 49, 44, 81),
+            ),
           ],
         ),
       ),
@@ -170,16 +217,11 @@ class _HomeScreenState extends State<HomeScreen> {
   // 🔹 Tank Level Circular Indicator
   Widget _buildTankIndicator() {
     Color getColor(double percentage) {
-      if (percentage <= 20)
-        return const Color.fromARGB(191, 0, 255, 0); // Bright Neon Green
-      if (percentage <= 40)
-        return const Color.fromARGB(217, 0, 230, 119); // Bright Green
-      if (percentage <= 60) {
-        return const Color.fromARGB(201, 249, 187, 0); // Bright Yellow
-      }
-      if (percentage <= 80)
-        return const Color.fromARGB(223, 255, 86, 34); // Bright Orange
-      return const Color(0xFFD50000); // Bright Red
+      if (percentage <= 20) return const Color.fromARGB(191, 0, 255, 0);
+      if (percentage <= 40) return const Color.fromARGB(217, 0, 230, 119);
+      if (percentage <= 60) return const Color.fromARGB(201, 249, 187, 0);
+      if (percentage <= 80) return const Color.fromARGB(223, 255, 86, 34);
+      return const Color(0xFFD50000);
     }
 
     return Column(
@@ -195,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Shadow(
                 blurRadius: 4.0,
                 color: Colors.black45,
-                offset: Offset(2, 2),
+                offset: Offset(0, 5),
               ),
             ],
           ),
