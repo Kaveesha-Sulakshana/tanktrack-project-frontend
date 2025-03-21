@@ -111,10 +111,22 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: Color.fromARGB(247, 240, 194, 142),
-          borderRadius: BorderRadius.circular(15),
+          color: const Color.fromARGB(247, 240, 194, 142),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 12),
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 6,
+              offset: const Offset(0, -12),
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,16 +137,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   todayDate,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(1),
+                    color: Colors.white.withOpacity(0.95),
                     fontSize: 16,
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 6),
                 const Text(
                   "Welcome Back",
                   style: TextStyle(
                     color: Color.fromARGB(255, 2, 46, 111),
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -142,8 +154,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   "User",
                   style: TextStyle(
                     color: Color.fromARGB(255, 2, 46, 111),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 19,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -294,6 +306,18 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 49, 44, 81),
           borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 12),
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 6,
+              offset: const Offset(0, -12),
+            ),
+          ],
         ),
       ),
     );
