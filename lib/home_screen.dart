@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'settings_screen.dart';
 import 'package:intl/intl.dart';
 import 'monthly_report.dart';
+import 'notifications_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -87,7 +88,17 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.white,
             ),
           ),
-          const Icon(Icons.notifications, color: Colors.white),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationsScreen(),
+                ),
+              );
+            },
+            child: const Icon(Icons.notifications, color: Colors.white),
+          ),
         ],
       ),
     );
