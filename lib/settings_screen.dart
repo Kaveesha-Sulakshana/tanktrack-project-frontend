@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/tank_configuration.dart';
+import 'package:flutter_application_1/wifi_configuration.dart';
 import 'home_screen.dart';
 import 'account_settings_screen.dart';
 import 'login_screen.dart';
@@ -53,12 +55,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          _buildSettingsTile(Icons.person, "Account settings"),
-          _buildSettingsTile(Icons.wifi, "Wi-Fi configuration"),
-          _buildSettingsTile(Icons.notifications, "Notification settings"),
-          _buildSettingsTile(Icons.star, "Premium features"),
-          _buildSettingsTile(Icons.call, "Contact us"),
-          _buildSettingsTile(Icons.group, "Meet the team"),
+          _buildSettingsTile(Icons.person, "Account Settings"),
+          _buildSettingsTile(Icons.wifi, "Wi-Fi Configuration"),
+          _buildSettingsTile(Icons.notifications, "Notification Settings"),
+          _buildSettingsTile(Icons.star, "Premium Features"),
+          _buildSettingsTile(Icons.call, "Contact Us"),
+          _buildSettingsTile(Icons.group, "Meet the Team"),
+          _buildSettingsTile(Icons.straighten, "Tank Configuration"),
           const SizedBox(height: 20),
           _buildLogoutButton(), // ✅ Logout button added
         ],
@@ -69,13 +72,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSettingsTile(IconData icon, String title) {
     return GestureDetector(
       onTap: () {
-        if (title == "Account settings") {
+        if (title == "Account Settings") {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => const AccountSettingsScreen(),
             ),
           );
+        }
+        else if (title == "Tank Configuration"){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context)=> const TankConfigurationScreen()),
+
+          );
+        }
+        else if (title == "Wi-Fi Configuration"){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context)=> const WiFiConfigurationScreen())
+          );
+      
+          
         }
       },
       child: Container(

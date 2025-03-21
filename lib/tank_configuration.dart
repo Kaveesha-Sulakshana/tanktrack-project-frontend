@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'tank_service.dart'; // Import the API service
+import 'tank_service.dart'; // ✅ Import the API service
 
 class TankConfigurationScreen extends StatefulWidget {
   const TankConfigurationScreen({super.key});
@@ -13,10 +13,40 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
   final TextEditingController depthController = TextEditingController();
   final TextEditingController sensorDistanceController = TextEditingController();
 
-  Future<void> _saveConfig() async {
+  double? currentDepth;
+  double? currentSensorDistance;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTankConfiguration();
+  }
+
+  // 🔹 Fetch existing Tank Configuration
+  Future<void> _fetchTankConfiguration() async {
+    try {
+      const String tankId = "your-tank-id"; // Replace with actual tankId
+      Map<String, dynamic>? tankConfig = await TankService.getTankConfiguration(tankId);
+
+      if (tankConfig != null) {
+        setState(() {
+          currentDepth = tankConfig['depth'];
+          currentSensorDistance = tankConfig['sensorDistance'];
+
+          depthController.text = currentDepth?.toString() ?? "";
+          sensorDistanceController.text = currentSensorDistance?.toString() ?? "";
+        });
+      }
+    } catch (e) {
+      print("❌ Error fetching tank configuration: $e");
+    }
+  }
+
+  // 🔹 Save Tank Configuration
+  Future<void> _saveTankConfiguration() async {
     if (depthController.text.isEmpty || sensorDistanceController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter all values")),
+        const SnackBar(content: Text("Please enter both Depth and Sensor Distance")),
       );
       return;
     }
@@ -26,7 +56,7 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
 
     if (depth <= 0 || sensorDistance <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Depth and sensor distance must be greater than zero")),
+        const SnackBar(content: Text("Depth and Sensor Distance must be greater than zero")),
       );
       return;
     }
@@ -34,14 +64,13 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
     try {
       await TankService.saveTankConfiguration(depth, sensorDistance);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Configuration Saved Successfully")),
+        const SnackBar(content: Text("Tank Configuration Saved Successfully")),
       );
-      depthController.clear();
-      sensorDistanceController.clear();
+      _fetchTankConfiguration(); // Refresh data
     } catch (e) {
-      print("Error saving configuration: $e");
+      print("❌ Error saving configuration: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to save configuration")),
+        const SnackBar(content: Text("Failed to save tank configuration")),
       );
     }
   }
@@ -52,111 +81,95 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
       body: Container(
         color: const Color.fromARGB(255, 18, 82, 177),
         child: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                _buildBackButton(context),
-                const SizedBox(height: 10),
-                Text(
-                  "TANK\nCONFIGURATION",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20, top: 10),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                const SizedBox(height: 20),
-                Image.asset("assets/truck.png", width: 250),
-                const SizedBox(height: 20),
-                _buildInputFields(),
-                const SizedBox(height: 20),
-                _buildConfirmButton(),
-              ],
-            ),
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: Column(
+                  children: [
+                    Text(
+                      "Tank Configuration",
+                      style: GoogleFonts.poppins(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Image.asset("assets/truck.png", width: 130), // Ensure you have a matching image
+                    const SizedBox(height: 40),
+                    _buildLabel("Tank Depth (meters)"),
+                    _buildTextField(controller: depthController, hint: "Enter depth in meters"),
+                    const SizedBox(height: 20),
+                    _buildLabel("Sensor Distance (meters)"),
+                    _buildTextField(controller: sensorDistanceController, hint: "Enter sensor distance"),
+                    const SizedBox(height: 40),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF3B43D6),
+                        minimumSize: const Size(350, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                      ),
+                      onPressed: _saveTankConfiguration,
+                      child: const Text(
+                        "Save Configuration",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildBackButton(BuildContext context) {
+  Widget _buildLabel(String label) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+      child: Text(
+        label,
+        style: GoogleFonts.poppins(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
       ),
     );
   }
 
-  Widget _buildInputFields() {
+  Widget _buildTextField({required TextEditingController controller, required String hint}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          _buildTextField(
-            "Enter the depth of your tank",
-            "Depth of your tank (meters)",
-            depthController,
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: TextField(
+        controller: controller,
+        keyboardType: TextInputType.number,
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.12),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(11),
+            borderSide: const BorderSide(color: Colors.white60),
           ),
-          const SizedBox(height: 20),
-          _buildTextField(
-            "Enter the distance between sensor and the overflow pipe",
-            "Distance (meters)",
-            sensorDistanceController,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextField(String label, String hint, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.white,
-          ),
+          hintText: hint,
+          hintStyle: const TextStyle(color: Colors.white54),
         ),
-        const SizedBox(height: 5),
-        TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white54),
-            filled: true,
-            fillColor: Colors.white.withOpacity(0.12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(11),
-              borderSide: const BorderSide(color: Colors.white60),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildConfirmButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF3B43D6),
-        minimumSize: const Size(350, 50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
       ),
-      onPressed: _saveConfig,
-      child: const Text("CONFIRM", style: TextStyle(color: Colors.white)),
     );
   }
 }

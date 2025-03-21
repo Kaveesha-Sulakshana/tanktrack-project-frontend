@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class WiFiService {
-  static const String baseUrl = "http://10.0.2.2:8080/api/wifi"; // Use 10.0.2.2 for Android emulator, localhost for web/PC
+  static const String baseUrl = "http://10.0.2.2:8080/api/wifi/save"; // Use 10.0.2.2 for Android emulator, localhost for web/PC
 
   // Fetch WiFi configuration by tankId
   static Future<Map<String, dynamic>?> getWiFiConfiguration(String tankId) async {
