@@ -64,7 +64,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromARGB(255, 18, 82, 177),
+        color: const Color.fromARGB(255, 72, 66, 109),
         child: SafeArea(
           child: Column(
             children: [
@@ -114,7 +114,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           backgroundColor: Colors.white.withOpacity(0.2),
           child: const CircleAvatar(
             radius: 50,
-            backgroundColor: Colors.blue,
+            backgroundColor: Color.fromARGB(247, 240, 194, 142),
             child: Icon(Icons.person, size: 50, color: Colors.white),
           ),
         ),
@@ -176,7 +176,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
+            backgroundColor: const Color.fromARGB(247, 240, 194, 142),
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -195,8 +195,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           child: const Text(
             "Change Your Password",
             style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
+              fontSize: 18,
+              color: Color.fromARGB(255, 72, 66, 109),
               fontWeight: FontWeight.bold,
             ),
           ),
