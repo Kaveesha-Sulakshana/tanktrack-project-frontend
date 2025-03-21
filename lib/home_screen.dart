@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 18, 82, 177),
+        color: Color.fromARGB(255, 72, 66, 109),
         child: SafeArea(
           child: Column(
             children: [
@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.5),
+          color: Color.fromARGB(247, 240, 194, 142),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
@@ -158,12 +158,15 @@ class _HomeScreenState extends State<HomeScreen> {
   // 🔹 Tank Level Circular Indicator
   Widget _buildTankIndicator() {
     Color getColor(double percentage) {
-      if (percentage <= 20) return const Color(0xFF00FF00); // Bright Neon Green
-      if (percentage <= 40) return const Color(0xFF00E676); // Bright Green
+      if (percentage <= 20)
+        return const Color.fromARGB(191, 0, 255, 0); // Bright Neon Green
+      if (percentage <= 40)
+        return const Color.fromARGB(217, 0, 230, 119); // Bright Green
       if (percentage <= 60) {
-        return const Color(0xFFFFEB3B); // Bright Yellow
+        return const Color.fromARGB(201, 249, 187, 0); // Bright Yellow
       }
-      if (percentage <= 80) return const Color(0xFFFF5722); // Bright Orange
+      if (percentage <= 80)
+        return const Color.fromARGB(223, 255, 86, 34); // Bright Orange
       return const Color(0xFFD50000); // Bright Red
     }
 
@@ -174,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
           "Tank Summary",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 24,
+            fontSize: 27,
             fontWeight: FontWeight.bold,
             shadows: [
               Shadow(
@@ -268,8 +271,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // 🔹 Bottom Navigation Bar
   Widget _buildBottomNavigationBar() {
     return BottomNavigationBar(
-      backgroundColor: Color.fromARGB(255, 9, 38, 82),
-      selectedItemColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 72, 66, 109),
+      selectedItemColor: Color.fromARGB(247, 240, 194, 142),
       unselectedItemColor: Colors.white54,
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
@@ -289,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
         width: double.infinity,
         height: 150,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.5),
+          color: Color.fromARGB(255, 49, 44, 81),
           borderRadius: BorderRadius.circular(15),
         ),
       ),
