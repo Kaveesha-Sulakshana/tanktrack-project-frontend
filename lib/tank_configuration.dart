@@ -1,14 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'tank_service.dart'; // Import the API service
 
-class TankConfigurationScreen extends StatelessWidget {
+class TankConfigurationScreen extends StatefulWidget {
   const TankConfigurationScreen({super.key});
+
+  @override
+  _TankConfigurationScreenState createState() => _TankConfigurationScreenState();
+}
+
+class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
+  final TextEditingController depthController = TextEditingController();
+  final TextEditingController sensorDistanceController = TextEditingController();
+
+  Future<void> _saveConfig() async {
+    if (depthController.text.isEmpty || sensorDistanceController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter all values")),
+      );
+      return;
+    }
+
+    double depth = double.tryParse(depthController.text) ?? 0;
+    double sensorDistance = double.tryParse(sensorDistanceController.text) ?? 0;
+
+    if (depth <= 0 || sensorDistance <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Depth and sensor distance must be greater than zero")),
+      );
+      return;
+    }
+
+    try {
+      await TankService.saveTankConfiguration(depth, sensorDistance);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Configuration Saved Successfully")),
+      );
+      depthController.clear();
+      sensorDistanceController.clear();
+    } catch (e) {
+      print("Error saving configuration: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to save configuration")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 18, 82, 177),
+        color: const Color.fromARGB(255, 18, 82, 177),
         child: SafeArea(
           child: Center(
             child: Column(
@@ -61,18 +103,20 @@ class TankConfigurationScreen extends StatelessWidget {
           _buildTextField(
             "Enter the depth of your tank",
             "Depth of your tank (meters)",
+            depthController,
           ),
           const SizedBox(height: 20),
           _buildTextField(
             "Enter the distance between sensor and the overflow pipe",
             "Distance (meters)",
+            sensorDistanceController,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTextField(String label, String hint) {
+  Widget _buildTextField(String label, String hint, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -86,6 +130,8 @@ class TankConfigurationScreen extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: hint,
@@ -109,7 +155,7 @@ class TankConfigurationScreen extends StatelessWidget {
         minimumSize: const Size(350, 50),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
       ),
-      onPressed: () {},
+      onPressed: _saveConfig,
       child: const Text("CONFIRM", style: TextStyle(color: Colors.white)),
     );
   }
