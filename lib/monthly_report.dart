@@ -21,6 +21,8 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
   Map<String, double> reportData = {};
   bool isLoading = true;
   Timer? timer;
+  double latestPercentage = 0.0;
+
 
   @override
   void initState() {
@@ -30,43 +32,35 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
       fetchReport();
     });
   }
-  @override
-  void dispose() {
-    timer?.cancel(); // ✅ Stop the 30s timer when leaving the screen
-    super.dispose();
-  }
-
 
   Future<void> fetchReport() async {
-  try {
-    final response = await http.get(
-      Uri.parse("http://10.0.2.2:8080/api/reports/latest"),
-    );
-    if (response.statusCode == 200) {
-      Map<String, dynamic> rawData = json.decode(response.body);
-      if (rawData.containsKey("month") &&
-          rawData.containsKey("latestPercentage")) {
-        String month = rawData["month"];
-        double percentage = (rawData["latestPercentage"] as num).toDouble();
+    try {
+      final response = await http.get(
+        Uri.parse("http://10.0.2.2:8080/api/reports/latest"),
+      );
+      if (response.statusCode == 200) {
+        Map<String, dynamic> rawData = json.decode(response.body);
+        if (rawData.containsKey("month") &&
+            rawData.containsKey("latestPercentage")) {
+          String month = rawData["month"];
+          double percentage = (rawData["latestPercentage"] as num).toDouble();
+          setState(() {
+            reportData[month] = percentage;
+            latestPercentage = percentage; // ✅ Track latest percentage correctly
+            isLoading = false;
+          });
 
-        if (!mounted) return; // ✅ Don't call setState if widget is gone
-        setState(() {
-          reportData[month] = percentage;
-          isLoading = false;
-        });
+        }
+      } else {
+        throw Exception("Failed to load report: ${response.statusCode}");
       }
-    } else {
-      throw Exception("Failed to load report: ${response.statusCode}");
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error fetching data: $e");
     }
-  } catch (e) {
-    if (!mounted) return; // ✅ Check again in catch block
-    setState(() {
-      isLoading = false;
-    });
-    print("Error fetching data: $e");
   }
-}
-
 
   // Function to generate and save PDF
   Future<void> generatePDF() async {
@@ -317,10 +311,10 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
                     if (reportData.isNotEmpty)
                       Column(
                         children: [
-                          buildTankIndicator(reportData.values.last),
+                          buildTankIndicator(latestPercentage),
                           SizedBox(height: 10),
                           Text(
-                            "Estimated days to full: ${_calculateDaysToFull(reportData.values.last)}",
+                            "Estimated days to full: ${_calculateDaysToFull(latestPercentage)}",
                             style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                           Text(
