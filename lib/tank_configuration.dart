@@ -6,12 +6,14 @@ class TankConfigurationScreen extends StatefulWidget {
   const TankConfigurationScreen({super.key});
 
   @override
-  _TankConfigurationScreenState createState() => _TankConfigurationScreenState();
+  _TankConfigurationScreenState createState() =>
+      _TankConfigurationScreenState();
 }
 
 class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
   final TextEditingController depthController = TextEditingController();
-  final TextEditingController sensorDistanceController = TextEditingController();
+  final TextEditingController sensorDistanceController =
+      TextEditingController();
 
   double? currentDepth;
   double? currentSensorDistance;
@@ -26,7 +28,9 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
   Future<void> _fetchTankConfiguration() async {
     try {
       const String tankId = "your-tank-id"; // Replace with actual tankId
-      Map<String, dynamic>? tankConfig = await TankService.getTankConfiguration(tankId);
+      Map<String, dynamic>? tankConfig = await TankService.getTankConfiguration(
+        tankId,
+      );
 
       if (tankConfig != null) {
         setState(() {
@@ -34,7 +38,8 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
           currentSensorDistance = tankConfig['sensorDistance'];
 
           depthController.text = currentDepth?.toString() ?? "";
-          sensorDistanceController.text = currentSensorDistance?.toString() ?? "";
+          sensorDistanceController.text =
+              currentSensorDistance?.toString() ?? "";
         });
       }
     } catch (e) {
@@ -46,7 +51,9 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
   Future<void> _saveTankConfiguration() async {
     if (depthController.text.isEmpty || sensorDistanceController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter both Depth and Sensor Distance")),
+        const SnackBar(
+          content: Text("Please enter both Depth and Sensor Distance"),
+        ),
       );
       return;
     }
@@ -56,7 +63,9 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
 
     if (depth <= 0 || sensorDistance <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Depth and Sensor Distance must be greater than zero")),
+        const SnackBar(
+          content: Text("Depth and Sensor Distance must be greater than zero"),
+        ),
       );
       return;
     }
@@ -79,7 +88,7 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromARGB(255, 18, 82, 177),
+        color: const Color.fromARGB(255, 72, 66, 109),
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,17 +115,31 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Image.asset("assets/truck.png", width: 130), // Ensure you have a matching image
+                    Image.asset(
+                      "assets/truck.png",
+                      width: 130,
+                    ), // Ensure you have a matching image
                     const SizedBox(height: 40),
                     _buildLabel("Tank Depth (meters)"),
-                    _buildTextField(controller: depthController, hint: "Enter depth in meters"),
+                    _buildTextField(
+                      controller: depthController,
+                      hint: "Enter depth in meters",
+                    ),
                     const SizedBox(height: 20),
                     _buildLabel("Sensor Distance (meters)"),
-                    _buildTextField(controller: sensorDistanceController, hint: "Enter sensor distance"),
+                    _buildTextField(
+                      controller: sensorDistanceController,
+                      hint: "Enter sensor distance",
+                    ),
                     const SizedBox(height: 40),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF3B43D6),
+                        backgroundColor: const Color.fromARGB(
+                          247,
+                          240,
+                          194,
+                          142,
+                        ),
                         minimumSize: const Size(350, 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(11),
@@ -125,7 +148,9 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
                       onPressed: _saveTankConfiguration,
                       child: const Text(
                         "Save Configuration",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 72, 66, 109),
+                        ),
                       ),
                     ),
                   ],
@@ -152,7 +177,10 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
     );
   }
 
-  Widget _buildTextField({required TextEditingController controller, required String hint}) {
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: TextField(
