@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'settings_screen.dart';
 import 'monthly_report.dart';
+import 'emergency_screen.dart';
 import 'notifications_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,22 +17,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  double tankPercentage = 0; 
+  double tankPercentage = 0;
   final DatabaseReference dbRef = FirebaseDatabase.instance.ref('tankLevel');
   String _rainCategory = "";
   String _location = "";
   bool _isLoadingWeather = true;
 
-
-  int _selectedIndex = 0; 
-  String firstName = "User"; 
+  int _selectedIndex = 0;
+  String firstName = "User";
   @override
   void initState() {
     super.initState();
     _fetchData();
     _fetchUserFirstName();
     _fetchWeatherForecast();
-
   }
 
   void _fetchData() {
@@ -79,7 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
         _selectedIndex = index;
       });
 
-      if (index == 2) {
+      if (index == 1) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const EmergencyScreen()),
+        );
+      } else if (index == 2) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const SettingsScreen()),
@@ -92,7 +96,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromARGB(255, 72, 66, 109),
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(0, -0.5), // Focuses gradient towards top center
+            radius: 1.2,
+            colors: [
+              Color.fromARGB(255, 72, 66, 109), // Center color (original)
+              Color.fromARGB(255, 50, 45, 85), // Outer darker shade
+            ],
+          ),
+        ),
         child: SafeArea(
           child: Column(
             children: [
@@ -160,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(247, 240, 194, 142),
+          color: const Color.fromARGB(255, 49, 44, 81),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -192,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Text(
                   "Welcome Back",
                   style: TextStyle(
-                    color: Color.fromARGB(255, 49, 44, 81),
+                    color: Color.fromARGB(255, 253, 253, 255),
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
@@ -200,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   firstName,
                   style: const TextStyle(
-                    color: Color.fromARGB(255, 49, 44, 81),
+                    color: Color.fromARGB(247, 240, 194, 142),
                     fontSize: 19,
                     fontWeight: FontWeight.w600,
                   ),
@@ -210,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const Icon(
               Icons.account_circle,
               size: 80,
-              color: Color.fromARGB(255, 49, 44, 81),
+              color: Color.fromARGB(247, 240, 194, 142),
             ),
           ],
         ),
@@ -328,131 +341,149 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // 🔹 Bottom Navigation Bar
   Widget _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      backgroundColor: Color.fromARGB(255, 72, 66, 109),
-      selectedItemColor: Color.fromARGB(247, 240, 194, 142),
-      unselectedItemColor: Colors.white54,
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.warning), label: "Alerts"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
-      ],
+    return Container(
+      decoration: const BoxDecoration(color: Color.fromARGB(255, 50, 45, 85)),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.transparent,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color.fromARGB(247, 240, 194, 142),
+        unselectedItemColor: Colors.white54,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
+        iconSize: 30,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0,
+        items: [
+          const BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
+          BottomNavigationBarItem(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.emergency, color: Colors.white, size: 28),
+            ),
+            label: "",
+          ),
+          const BottomNavigationBarItem(icon: Icon(Icons.settings), label: ""),
+        ],
+      ),
     );
   }
 
   // 🔹 Placeholder for bottom section
   Widget _buildBottomPlaceholder() {
-  String getWeatherImage(String category) {
-    switch (category) {
-      case "Low":
-        return 'assets/sunny.png';
-      case "Average":
-        return 'assets/cloudy.png';
-      case "High":
-        return 'assets/rainy.png';
-      case "Critical":
-        return 'assets/storm.png';
-      default:
-        return "";
+    String getWeatherImage(String category) {
+      switch (category) {
+        case "Low":
+          return 'assets/sunny.png';
+        case "Average":
+          return 'assets/cloudy.png';
+        case "High":
+          return 'assets/rainy.png';
+        case "Critical":
+          return 'assets/storm.png';
+        default:
+          return "";
+      }
     }
-  }
 
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-    child: Container(
-      width: double.infinity,
-      height: 150,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 49, 44, 81),
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 12,
-            offset: const Offset(0, 12),
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 6,
-            offset: const Offset(0, -12),
-          ),
-        ],
-      ),
-      child: _isLoadingWeather
-          ? const Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
-            )
-          : Row(
-              children: [
-                Image.asset(
-                  getWeatherImage(_rainCategory),
-                  height: 80,
-                  width: 80,
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Weather Forecast",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        _location,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        "Rain Category: $_rainCategory",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      child: Container(
+        width: double.infinity,
+        height: 150,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 49, 44, 81),
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 12),
             ),
-    ),
-  );
-}
-
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 6,
+              offset: const Offset(0, -12),
+            ),
+          ],
+        ),
+        child:
+            _isLoadingWeather
+                ? const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                )
+                : Row(
+                  children: [
+                    Image.asset(
+                      getWeatherImage(_rainCategory),
+                      height: 80,
+                      width: 80,
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Weather Forecast",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            _location,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            "Rain Category: $_rainCategory",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+      ),
+    );
+  }
 
   Future<void> _fetchWeatherForecast() async {
-  try {
-    final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/weather/forecast"));
+    try {
+      final response = await http.get(
+        Uri.parse("http://10.0.2.2:8080/api/weather/forecast"),
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      setState(() {
-        _location = data["location"] ?? "";
-        _rainCategory = data["rain_category"] ?? "Unknown";
-        _isLoadingWeather = false;
-      });
-    } else {
-      print("❌ Weather API error: ${response.body}");
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _location = data["location"] ?? "";
+          _rainCategory = data["rain_category"] ?? "Unknown";
+          _isLoadingWeather = false;
+        });
+      } else {
+        print("❌ Weather API error: ${response.body}");
+      }
+    } catch (e) {
+      print("❌ Weather fetch failed: $e");
     }
-  } catch (e) {
-    print("❌ Weather fetch failed: $e");
   }
-}
-
-
 }
