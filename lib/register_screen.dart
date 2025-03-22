@@ -123,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 18, 82, 177),
+        color: Color.fromARGB(255, 72, 66, 109),
         child: Center(
           child: SingleChildScrollView(
             child: Form(
@@ -131,7 +131,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 60),
                   Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: IconButton(
@@ -141,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Center(
                     child: Text(
-                      "NEW USER\nREGISTRATION",
+                      "TANK TRACK USER\nREGISTRATION",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         fontSize: 24,
@@ -156,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
+                        color: const Color.fromARGB(110, 240, 194, 142),
                         borderRadius: BorderRadius.circular(19),
                       ),
                       child: Column(
@@ -223,7 +222,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 10),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF3B43D6),
+                              backgroundColor: const Color.fromARGB(
+                                255,
+                                49,
+                                44,
+                                81,
+                              ),
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(11),

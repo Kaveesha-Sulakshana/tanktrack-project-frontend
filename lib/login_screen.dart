@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromARGB(255, 18, 82, 177),
+        color: const Color.fromARGB(255, 72, 66, 109),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 50),
                 Text(
-                  "LOGIN TO\nYOUR ACCOUNT",
+                  "LOGIN TO\nTANK TRACK",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     fontSize: 24,
@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(20),
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
+                    color: const Color.fromARGB(110, 240, 194, 142),
                     borderRadius: BorderRadius.circular(19),
                   ),
                   child: Column(
@@ -221,14 +221,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       GestureDetector(
                         onTap: _resetPassword,
                         child: const Text(
-                          "Forgot Password?",
-                          style: TextStyle(color: Colors.yellow, fontSize: 14),
+                          "Forgot Password ?",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 240, 194, 142),
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3B43D6),
+                          backgroundColor: Color.fromARGB(255, 49, 44, 81),
                           minimumSize: const Size(350, 50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -255,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             Image(
                               image: AssetImage('assets/google_logo.png'),
-                              height: 24,
+                              height: 52,
                             ),
                             SizedBox(width: 10),
                             Text(
@@ -291,8 +294,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: const Text(
                               "Register now",
                               style: TextStyle(
-                                color: Colors.yellow,
-                                fontSize: 14,
+                                color: Color.fromARGB(255, 240, 194, 142),
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
