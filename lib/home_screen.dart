@@ -111,14 +111,14 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               _buildAppBar(),
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildUserCard(firstName),
-                      _buildTankIndicator(),
-                      _buildBottomPlaceholder(),
-                    ],
-                  ),
+                child: Column(
+                  children: [
+                    _buildUserCard(firstName),
+                    const SizedBox(height: 10),
+                    _buildTankIndicator(),
+                    const SizedBox(height: 10),
+                    _buildBottomPlaceholder(),
+                  ],
                 ),
               ),
             ],
@@ -375,96 +375,103 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔹 Placeholder for bottom section
   Widget _buildBottomPlaceholder() {
-    String getWeatherImage(String category) {
-      switch (category) {
-        case "Low":
-          return 'assets/sunny.png';
-        case "Average":
-          return 'assets/cloudy.png';
-        case "High":
-          return 'assets/rainy.png';
-        case "Critical":
-          return 'assets/storm.png';
-        default:
-          return "";
-      }
+  String getWeatherImage(String category) {
+    switch (category) {
+      case "Low":
+        return 'assets/sunny.png';
+      case "Average":
+        return 'assets/cloudy.png';
+      case "High":
+        return 'assets/rainy.png';
+      case "Critical":
+        return 'assets/storm.png';
+      default:
+        return 'assets/unknown.png';
     }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-      child: Container(
-        width: double.infinity,
-        height: 150,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 49, 44, 81),
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 12,
-              offset: const Offset(0, 12),
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 6,
-              offset: const Offset(0, -12),
-            ),
-          ],
-        ),
-        child:
-            _isLoadingWeather
-                ? const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
-                )
-                : Row(
-                  children: [
-                    Image.asset(
-                      getWeatherImage(_rainCategory),
-                      height: 80,
-                      width: 80,
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Weather Forecast",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            _location,
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            "Rain Category: $_rainCategory",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-      ),
-    );
   }
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10), // ⬅️ Reduced vertical padding
+    child: Container(
+      width: double.infinity,
+      height: 130, // ⬅️ Reduced height from 150
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 49, 44, 81),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: _isLoadingWeather
+          ? const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            )
+          : Row(
+              children: [
+                const SizedBox(width: 16),
+                Container(
+                  height: 65,
+                  width: 65,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Image.asset(
+                      getWeatherImage(_rainCategory),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 18),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Weather Forecast",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        "Rain Category: $_rainCategory",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+              ],
+            ),
+    ),
+  );
+}
+
+
+
+
 
   Future<void> _fetchWeatherForecast() async {
     try {
