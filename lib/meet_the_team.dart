@@ -10,14 +10,7 @@ class MeetTheTeamScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF3C3B6E),
-              Color(0xFF1B1A35),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+          color: const Color.fromARGB(255, 50, 45, 85),
         ),
         child: SafeArea(
           child: Column(
@@ -95,10 +88,7 @@ class MeetTheTeamScreen extends StatelessWidget {
             Text(
               "Meet the talented developers behind this application.",
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.white70,
-              ),
+              style: GoogleFonts.poppins(fontSize: 14, color: Colors.white70),
             ),
           ],
         ),
@@ -211,7 +201,11 @@ class MeetTheTeamScreen extends StatelessWidget {
                 height: 70,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.person, size: 50, color: Colors.white70);
+                  return const Icon(
+                    Icons.person,
+                    size: 50,
+                    color: Colors.white70,
+                  );
                 },
               ),
             ),
@@ -227,10 +221,7 @@ class MeetTheTeamScreen extends StatelessWidget {
           ),
           Text(
             role,
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              color: Colors.white70,
-            ),
+            style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
           ),
           const SizedBox(height: 8),
           Row(

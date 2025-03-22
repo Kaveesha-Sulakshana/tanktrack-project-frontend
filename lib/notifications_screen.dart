@@ -71,7 +71,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Notifications"),
-        backgroundColor: const Color.fromARGB(255, 72, 66, 109),
+        backgroundColor: const Color.fromARGB(255, 50, 45, 85),
       ),
       body:
           notifications.isEmpty

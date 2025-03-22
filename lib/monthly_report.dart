@@ -280,12 +280,12 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Monthly Report"),
-        backgroundColor: const Color.fromARGB(255, 72, 66, 109),
+        backgroundColor: const Color.fromARGB(255, 50, 45, 85),
         actions: [
           IconButton(icon: Icon(Icons.picture_as_pdf), onPressed: generatePDF),
         ],
       ),
-      backgroundColor: const Color.fromARGB(255, 72, 66, 109),
+      backgroundColor: const Color.fromARGB(255, 50, 45, 85),
       body:
           isLoading
               ? Center(child: CircularProgressIndicator())

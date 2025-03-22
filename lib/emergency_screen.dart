@@ -74,7 +74,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
     return Scaffold(
       appBar: _buildAppBar(),
       body: Container(
-        color: const Color.fromARGB(255, 72, 66, 109),
+        color: const Color.fromARGB(255, 50, 45, 85),
         child:
             isLoading
                 ? Center(child: CircularProgressIndicator())
@@ -232,11 +232,11 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
   // 🔹 Bottom Navigation Bar
   Widget _buildBottomNavigationBar() {
     return Container(
-      decoration: const BoxDecoration(color: Color.fromARGB(255, 72, 66, 109)),
+      color: const Color.fromARGB(255, 50, 45, 85), // Updated solid background
       child: BottomNavigationBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color.fromARGB(255, 50, 45, 85),
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.white,
+        selectedItemColor: const Color.fromARGB(247, 240, 194, 142),
         unselectedItemColor: Colors.white54,
         selectedFontSize: 14,
         unselectedFontSize: 12,
@@ -250,12 +250,12 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
           const BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
           BottomNavigationBarItem(
             icon: Container(
-              padding: const EdgeInsets.all(10),
-              child: const Icon(
-                Icons.warning_amber_rounded,
-                color: Colors.white,
-                size: 32,
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
               ),
+              child: const Icon(Icons.emergency, color: Colors.white, size: 28),
             ),
             label: "",
           ),

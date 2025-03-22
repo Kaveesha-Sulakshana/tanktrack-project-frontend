@@ -12,16 +12,7 @@ class AboutUsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF3C3B6E),
-              Color(0xFF1B1A35),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        decoration: const BoxDecoration(color: Color.fromARGB(255, 50, 45, 85)),
         child: SafeArea(
           child: Column(
             children: [
@@ -100,14 +91,11 @@ class AboutUsScreen extends StatelessWidget {
             const SizedBox(height: 15),
             Text(
               "TankTrack is a real-time septic tank monitoring system developed by a team of passionate Computer Science students.\n\n"
-                  "Our goal is to help users efficiently manage tank levels, avoid overflows, and stay informed through smart alerts and insights.\n\n"
-                  "The system integrates IoT sensors with a Flutter-based frontend and a powerful Spring Boot backend. All data is stored securely using Firebase and MongoDB.\n\n"
-                  "This solution is scalable, user-friendly, and aims to make waste management smarter and easier.",
+              "Our goal is to help users efficiently manage tank levels, avoid overflows, and stay informed through smart alerts and insights.\n\n"
+              "The system integrates IoT sensors with a Flutter-based frontend and a powerful Spring Boot backend. All data is stored securely using Firebase and MongoDB.\n\n"
+              "This solution is scalable, user-friendly, and aims to make waste management smarter and easier.",
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontSize: 15,
-                color: Colors.white70,
-              ),
+              style: GoogleFonts.poppins(fontSize: 15, color: Colors.white70),
             ),
             const SizedBox(height: 20),
             Text(
@@ -143,11 +131,9 @@ class AboutUsScreen extends StatelessWidget {
         ),
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF6C63FF),
+        backgroundColor: const Color.fromARGB(255, 72, 66, 109),
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 6,
       ),
     );
