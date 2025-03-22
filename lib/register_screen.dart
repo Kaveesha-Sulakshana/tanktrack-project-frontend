@@ -123,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 72, 66, 109),
+        color: const Color.fromARGB(255, 50, 45, 85),
         child: Center(
           child: SingleChildScrollView(
             child: Form(

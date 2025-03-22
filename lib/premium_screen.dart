@@ -9,15 +9,7 @@ class PremiumScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            radius: 1.2,
-            colors: [
-              Color(0xFF011D47),
-              Color(0xFF00050B),
-              Color(0xFF00060E),
-            ],
-            stops: [0.0, 1.0, 1.0],
-          ),
+          color: const Color.fromARGB(255, 50, 45, 85),
         ),
         child: Center(
           child: Column(
@@ -45,10 +37,7 @@ class PremiumScreen extends StatelessWidget {
               const SizedBox(height: 30),
 
               // Premium Image (Stars)
-              Image.asset(
-                "assets/premium.png",
-                width: 150,
-              ),
+              Image.asset("assets/premium.png", width: 150),
 
               const SizedBox(height: 20),
 
@@ -68,10 +57,7 @@ class PremiumScreen extends StatelessWidget {
               Text(
                 "Unlimited tank monitoring, Custom reports\nand so more!",
                 textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.white,
-                ),
+                style: GoogleFonts.poppins(fontSize: 14, color: Colors.white),
               ),
 
               const SizedBox(height: 30),
@@ -125,10 +111,7 @@ class PremiumScreen extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             text,
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: Colors.white,
-            ),
+            style: GoogleFonts.poppins(fontSize: 14, color: Colors.white),
           ),
         ],
       ),

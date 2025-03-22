@@ -73,7 +73,7 @@ class _WiFiConfigurationScreenState extends State<WiFiConfigurationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromARGB(255, 72, 66, 109),
+        color: const Color.fromARGB(255, 50, 45, 85),
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

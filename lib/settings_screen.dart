@@ -7,6 +7,7 @@ import 'package:flutter_application_1/wifi_configuration.dart';
 import 'home_screen.dart';
 import 'account_settings_screen.dart';
 import 'login_screen.dart';
+import 'emergency_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -22,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 72, 66, 109),
+        color: Color.fromARGB(255, 50, 45, 85),
         child: SafeArea(
           child: Column(children: [_buildAppBar(), _buildSettingsList()]),
         ),
@@ -99,20 +100,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         } else if (title == "About Us") {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const AboutUsScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => const AboutUsScreen()),
           );
-        }else if (title == "Meet the Team") {
+        } else if (title == "Meet the Team") {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const MeetTheTeamScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => const MeetTheTeamScreen()),
           );
         }
-
-      
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 15, top: 5),
@@ -140,7 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromARGB(255, 49, 44, 81),
+          backgroundColor: Color.fromARGB(255, 72, 66, 109),
           padding: const EdgeInsets.symmetric(vertical: 15),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -179,24 +174,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      backgroundColor: Color.fromARGB(255, 72, 66, 109),
-      selectedItemColor: Color.fromARGB(247, 240, 194, 142),
-      unselectedItemColor: Colors.white54,
-      currentIndex: _selectedIndex, // Highlight selected tab
-      onTap: (index) {
-        if (index == 0 && _selectedIndex != 0) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-          );
-        }
-      },
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.warning), label: "Alerts"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
-      ],
+    return Container(
+      color: const Color.fromARGB(
+        255,
+        49,
+        44,
+        81,
+      ), // Solid background from #0A00C1
+      child: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 49, 44, 81),
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color.fromARGB(247, 240, 194, 142),
+        unselectedItemColor: Colors.white54,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
+        iconSize: 30,
+        currentIndex: _selectedIndex, // Highlight selected tab
+        onTap: (index) {
+          if (index == 0 && _selectedIndex != 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          } else if (index == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const EmergencyScreen()),
+            );
+          }
+        },
+        items: [
+          const BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
+          BottomNavigationBarItem(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.emergency, color: Colors.white, size: 28),
+            ),
+            label: "",
+          ),
+          const BottomNavigationBarItem(icon: Icon(Icons.settings), label: ""),
+        ],
+      ),
     );
   }
 }

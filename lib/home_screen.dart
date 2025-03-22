@@ -96,16 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            center: Alignment(0, -0.5), // Focuses gradient towards top center
-            radius: 1.2,
-            colors: [
-              Color.fromARGB(255, 72, 66, 109), // Center color (original)
-              Color.fromARGB(255, 50, 45, 85), // Outer darker shade
-            ],
-          ),
-        ),
+        decoration: const BoxDecoration(color: Color.fromARGB(255, 50, 45, 85)),
         child: SafeArea(
           child: Column(
             children: [
