@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'wifi_service.dart'; 
+import 'wifi_service.dart';
 
 class WiFiConfigurationScreen extends StatefulWidget {
   const WiFiConfigurationScreen({super.key});
 
   @override
-  _WiFiConfigurationScreenState createState() => _WiFiConfigurationScreenState();
+  _WiFiConfigurationScreenState createState() =>
+      _WiFiConfigurationScreenState();
 }
 
 class _WiFiConfigurationScreenState extends State<WiFiConfigurationScreen> {
@@ -25,7 +26,9 @@ class _WiFiConfigurationScreenState extends State<WiFiConfigurationScreen> {
   Future<void> _fetchWiFiConfiguration() async {
     try {
       const String tankId = "your-tank-id"; // Replace with actual tankId
-      Map<String, dynamic>? wifiConfig = await WiFiService.getWiFiConfiguration(tankId);
+      Map<String, dynamic>? wifiConfig = await WiFiService.getWiFiConfiguration(
+        tankId,
+      );
 
       if (wifiConfig != null) {
         setState(() {
@@ -50,7 +53,10 @@ class _WiFiConfigurationScreenState extends State<WiFiConfigurationScreen> {
     }
 
     try {
-      await WiFiService.saveWiFiConfiguration(ssidController.text, passwordController.text);
+      await WiFiService.saveWiFiConfiguration(
+        ssidController.text,
+        passwordController.text,
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("WiFi Configuration Saved Successfully")),
       );
@@ -67,7 +73,7 @@ class _WiFiConfigurationScreenState extends State<WiFiConfigurationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromARGB(255, 18, 82, 177),
+        color: const Color.fromARGB(255, 72, 66, 109),
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,11 +106,19 @@ class _WiFiConfigurationScreenState extends State<WiFiConfigurationScreen> {
                     _buildTextField(controller: ssidController),
                     const SizedBox(height: 20),
                     _buildLabel("Wi-fi Password"),
-                    _buildTextField(controller: passwordController, obscureText: true),
+                    _buildTextField(
+                      controller: passwordController,
+                      obscureText: true,
+                    ),
                     const SizedBox(height: 40),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF3B43D6),
+                        backgroundColor: const Color.fromARGB(
+                          247,
+                          240,
+                          194,
+                          142,
+                        ),
                         minimumSize: const Size(350, 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(11),
@@ -113,7 +127,9 @@ class _WiFiConfigurationScreenState extends State<WiFiConfigurationScreen> {
                       onPressed: _saveWiFiConfiguration,
                       child: const Text(
                         "Save",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 72, 66, 109),
+                        ),
                       ),
                     ),
                   ],
@@ -140,7 +156,10 @@ class _WiFiConfigurationScreenState extends State<WiFiConfigurationScreen> {
     );
   }
 
-  Widget _buildTextField({required TextEditingController controller, bool obscureText = false}) {
+  Widget _buildTextField({
+    required TextEditingController controller,
+    bool obscureText = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: TextField(
