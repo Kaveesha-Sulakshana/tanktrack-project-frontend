@@ -13,40 +13,119 @@ class AuthService {
         password: password,
       );
       return credential.user;
+    } on FirebaseAuthException catch (e) {
+      print("❌ Firebase Auth Error (Email Sign-In): ${e.message}");
+      return null;
     } catch (e) {
-      print("Error in Email Sign-In: $e");
+      print("❌ Unexpected error in Email Sign-In: $e");
       return null;
     }
   }
 
-  // Google Sign-In
+  // Google Sign-In (Returns User, Not String)
   Future<User?> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null; // User canceled login
+      await _googleSignIn.signOut(); // Ensure clean login session
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        print("⚠️ Google Sign-In was cancelled by the user.");
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
-      return userCredential.user;
+      UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+      User? user = userCredential.user;
+
+      if (user != null) {
+        print("✅ Google Sign-In successful!");
+        print("User ID: ${user.uid}");
+        print("User Email: ${user.email}");
+        print("User Name: ${user.displayName}");
+        print("User Photo: ${user.photoURL}");
+
+        // Retrieve Firebase ID Token
+        String? firebaseToken = await getFirebaseToken();
+        print("🔥 Firebase ID Token: $firebaseToken");
+
+        return user; // Return the user instead of token
+      } else {
+        print("❌ Google Sign-In failed: No user found.");
+        return null;
+      }
+    } on FirebaseAuthException catch (e) {
+      print("❌ Firebase Auth Error (Google Sign-In): ${e.message}");
+      return null;
     } catch (e) {
-      print("Error in Google Sign-In: $e");
+      print("❌ Unexpected error in Google Sign-In: $e");
+      return null;
+    }
+  }
+
+  // Get Firebase ID Token
+  Future<String?> getFirebaseToken() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      String? token = await user.getIdToken(true);
+      print("🔥 Firebase ID Token (Separate Request): $token");
+      return token;
+    } else {
+      print("❌ No user logged in.");
       return null;
     }
   }
 
   // Logout
   Future<void> signOut() async {
-    await _auth.signOut();
-    await _googleSignIn.signOut();
+    try {
+      await _googleSignIn.signOut();
+      await _auth.signOut();
+      print("✅ User successfully signed out.");
+    } catch (e) {
+      print("❌ Error signing out: $e");
+    }
   }
 
   // Get current user
   User? getCurrentUser() {
     return _auth.currentUser;
+  }
+
+  // Check if user is logged in
+  Future<bool> isUserLoggedIn() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        await user.reload();
+        return _auth.currentUser != null;
+      }
+    } catch (e) {
+      print("❌ Error checking user login status: $e");
+    }
+    return false;
+  }
+
+  // Get user profile details safely
+  Map<String, dynamic>? getUserProfile() {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      return {
+        "uid": user.uid,
+        "email": user.email ?? "No email",
+        "displayName": user.displayName ?? "No name",
+        "photoURL": user.photoURL ?? "No profile picture",
+      };
+    }
+    return null;
   }
 }
