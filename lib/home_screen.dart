@@ -16,18 +16,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  double tankPercentage = 0; // Default value
+  double tankPercentage = 0; 
   final DatabaseReference dbRef = FirebaseDatabase.instance.ref('tankLevel');
+  String _rainCategory = "";
+  String _location = "";
+  bool _isLoadingWeather = true;
 
-  int _selectedIndex = 0; // Track active bottom nav item
 
-  String firstName = "User"; // 🔹 Added for user welcome card
-
+  int _selectedIndex = 0; 
+  String firstName = "User"; 
   @override
   void initState() {
     super.initState();
     _fetchData();
-    _fetchUserFirstName(); // 🔹 Fetch user's name
+    _fetchUserFirstName();
+    _fetchWeatherForecast();
+
   }
 
   void _fetchData() {
@@ -340,28 +344,115 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // 🔹 Placeholder for bottom section
   Widget _buildBottomPlaceholder() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-      child: Container(
-        width: double.infinity,
-        height: 150,
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 49, 44, 81),
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 12,
-              offset: const Offset(0, 12),
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 6,
-              offset: const Offset(0, -12),
-            ),
-          ],
-        ),
-      ),
-    );
+  String getWeatherImage(String category) {
+    switch (category) {
+      case "Low":
+        return 'assets/sunny.png';
+      case "Average":
+        return 'assets/cloudy.png';
+      case "High":
+        return 'assets/rainy.png';
+      case "Critical":
+        return 'assets/storm.png';
+      default:
+        return "";
+    }
   }
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+    child: Container(
+      width: double.infinity,
+      height: 150,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 49, 44, 81),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 12),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, -12),
+          ),
+        ],
+      ),
+      child: _isLoadingWeather
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            )
+          : Row(
+              children: [
+                Image.asset(
+                  getWeatherImage(_rainCategory),
+                  height: 80,
+                  width: 80,
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Weather Forecast",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        _location,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        "Rain Category: $_rainCategory",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+    ),
+  );
+}
+
+
+  Future<void> _fetchWeatherForecast() async {
+  try {
+    final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/weather/forecast"));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        _location = data["location"] ?? "";
+        _rainCategory = data["rain_category"] ?? "Unknown";
+        _isLoadingWeather = false;
+      });
+    } else {
+      print("❌ Weather API error: ${response.body}");
+    }
+  } catch (e) {
+    print("❌ Weather fetch failed: $e");
+  }
+}
+
+
 }

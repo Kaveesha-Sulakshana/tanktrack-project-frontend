@@ -310,11 +310,11 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
                           buildTankIndicator(reportData.values.last),
                           SizedBox(height: 10),
                           Text(
-                            "📅 Estimated days to full: ${_calculateDaysToFull(reportData.values.last)}",
+                            "Estimated days to full: ${_calculateDaysToFull(reportData.values.last)}",
                             style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                           Text(
-                            "📉 Current daily usage: ${_calculateDailyUsage()}%",
+                            "Current daily usage: ${_calculateDailyUsage()}%",
                             style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ],
