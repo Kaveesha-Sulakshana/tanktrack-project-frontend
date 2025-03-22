@@ -85,32 +85,32 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Container(
-      color: const Color.fromARGB(255, 72, 66, 109),
-      child: SafeArea(
-        child: Column(
-          children: [
-            _buildAppBar(),
-            Expanded( 
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildUserCard(firstName),
-                    _buildTankIndicator(),
-                    _buildBottomPlaceholder(),
-                  ],
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: const Color.fromARGB(255, 72, 66, 109),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildAppBar(),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _buildUserCard(firstName),
+                      _buildTankIndicator(),
+                      _buildBottomPlaceholder(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-    bottomNavigationBar: _buildBottomNavigationBar(),
-  );
-}
+      bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
 
   // 🔹 Top AppBar Section
   Widget _buildAppBar() {
@@ -137,7 +137,10 @@ Widget build(BuildContext context) {
                 ),
               );
             },
-            child: const Icon(Icons.notifications, color: Colors.white),
+            child: const Icon(
+              Icons.notifications,
+              color: Color.fromARGB(247, 240, 194, 142),
+            ),
           ),
         ],
       ),
@@ -177,15 +180,15 @@ Widget build(BuildContext context) {
                 Text(
                   todayDate,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.95),
-                    fontSize: 16,
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 18,
                   ),
                 ),
                 const SizedBox(height: 6),
                 const Text(
                   "Welcome Back",
                   style: TextStyle(
-                    color: Color.fromARGB(255, 2, 46, 111),
+                    color: Color.fromARGB(255, 49, 44, 81),
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
@@ -193,14 +196,18 @@ Widget build(BuildContext context) {
                 Text(
                   firstName,
                   style: const TextStyle(
-                    color: Color.fromARGB(255, 2, 46, 111),
+                    color: Color.fromARGB(255, 49, 44, 81),
                     fontSize: 19,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
-            const Icon(Icons.account_circle, size: 80, color: Colors.white),
+            const Icon(
+              Icons.account_circle,
+              size: 80,
+              color: Color.fromARGB(255, 49, 44, 81),
+            ),
           ],
         ),
       ),
@@ -210,14 +217,10 @@ Widget build(BuildContext context) {
   // 🔹 Tank Level Circular Indicator
   Widget _buildTankIndicator() {
     Color getColor(double percentage) {
-      if (percentage <= 20)
-        return const Color.fromARGB(191, 0, 255, 0);
-      if (percentage <= 40)
-        return const Color.fromARGB(217, 0, 230, 119);
-      if (percentage <= 60)
-        return const Color.fromARGB(201, 249, 187, 0);
-      if (percentage <= 80)
-        return const Color.fromARGB(223, 255, 86, 34);
+      if (percentage <= 20) return const Color.fromARGB(191, 0, 255, 0);
+      if (percentage <= 40) return const Color.fromARGB(217, 0, 230, 119);
+      if (percentage <= 60) return const Color.fromARGB(201, 249, 187, 0);
+      if (percentage <= 80) return const Color.fromARGB(223, 255, 86, 34);
       return const Color(0xFFD50000);
     }
 
@@ -234,7 +237,7 @@ Widget build(BuildContext context) {
               Shadow(
                 blurRadius: 4.0,
                 color: Colors.black45,
-                offset: Offset(2, 2),
+                offset: Offset(0, 5),
               ),
             ],
           ),
