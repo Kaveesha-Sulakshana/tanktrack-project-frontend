@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/about_us.dart';
+import 'package:flutter_application_1/meet_the_team.dart';
 import 'package:flutter_application_1/tank_configuration.dart';
 import 'package:flutter_application_1/wifi_configuration.dart';
 import 'home_screen.dart';
@@ -60,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingsTile(Icons.straighten, "Tank Configuration"),
           _buildSettingsTile(Icons.notifications, "Notification Settings"),
           _buildSettingsTile(Icons.star, "Premium Features"),
-          _buildSettingsTile(Icons.call, "Contact Us"),
+          _buildSettingsTile(Icons.call, "About Us"),
           _buildSettingsTile(Icons.group, "Meet the Team"),
 
           const SizedBox(height: 20),
@@ -94,7 +96,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
               builder: (context) => const WiFiConfigurationScreen(),
             ),
           );
+        } else if (title == "About Us") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AboutUsScreen(),
+            ),
+          );
+        }else if (title == "Meet the Team") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MeetTheTeamScreen(),
+            ),
+          );
         }
+
+      
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 15, top: 5),
