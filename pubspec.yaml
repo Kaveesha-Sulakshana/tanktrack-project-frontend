@@ -53,6 +53,12 @@ flutter:
     - assets/rainy.png
     - assets/stromy.png
     - assets/sunny.png
+    - assets/service1.png
+    - assets/service2.png
+    - assets/service3.png
+    - assets/service4.png
+    - assets/logo.png
+    - assets/logomark.png
     
 
 flutter_icons:
