@@ -30,33 +30,43 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
       fetchReport();
     });
   }
+  @override
+  void dispose() {
+    timer?.cancel(); // ✅ Stop the 30s timer when leaving the screen
+    super.dispose();
+  }
+
 
   Future<void> fetchReport() async {
-    try {
-      final response = await http.get(
-        Uri.parse("http://10.0.2.2:8080/api/reports/latest"),
-      );
-      if (response.statusCode == 200) {
-        Map<String, dynamic> rawData = json.decode(response.body);
-        if (rawData.containsKey("month") &&
-            rawData.containsKey("latestPercentage")) {
-          String month = rawData["month"];
-          double percentage = (rawData["latestPercentage"] as num).toDouble();
-          setState(() {
-            reportData[month] = percentage;
-            isLoading = false;
-          });
-        }
-      } else {
-        throw Exception("Failed to load report: ${response.statusCode}");
+  try {
+    final response = await http.get(
+      Uri.parse("http://10.0.2.2:8080/api/reports/latest"),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> rawData = json.decode(response.body);
+      if (rawData.containsKey("month") &&
+          rawData.containsKey("latestPercentage")) {
+        String month = rawData["month"];
+        double percentage = (rawData["latestPercentage"] as num).toDouble();
+
+        if (!mounted) return; // ✅ Don't call setState if widget is gone
+        setState(() {
+          reportData[month] = percentage;
+          isLoading = false;
+        });
       }
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      print("Error fetching data: $e");
+    } else {
+      throw Exception("Failed to load report: ${response.statusCode}");
     }
+  } catch (e) {
+    if (!mounted) return; // ✅ Check again in catch block
+    setState(() {
+      isLoading = false;
+    });
+    print("Error fetching data: $e");
   }
+}
+
 
   // Function to generate and save PDF
   Future<void> generatePDF() async {
