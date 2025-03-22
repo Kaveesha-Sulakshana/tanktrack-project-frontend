@@ -120,16 +120,16 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
                       width: 130,
                     ), // Ensure you have a matching image
                     const SizedBox(height: 40),
-                    _buildLabel("Tank Depth (meters)"),
+                    _buildLabel("Tank Depth"),
                     _buildTextField(
                       controller: depthController,
-                      hint: "Enter depth in meters",
+                      hint: "Enter depth (Meters)",
                     ),
                     const SizedBox(height: 20),
-                    _buildLabel("Sensor Distance (meters)"),
+                    _buildLabel("Sensor Distance "),
                     _buildTextField(
                       controller: sensorDistanceController,
-                      hint: "Enter sensor distance",
+                      hint: "Enter sensor distance (Meters)",
                     ),
                     const SizedBox(height: 40),
                     ElevatedButton(

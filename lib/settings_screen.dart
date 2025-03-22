@@ -57,11 +57,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           _buildSettingsTile(Icons.person, "Account Settings"),
           _buildSettingsTile(Icons.wifi, "Wi-Fi Configuration"),
+          _buildSettingsTile(Icons.straighten, "Tank Configuration"),
           _buildSettingsTile(Icons.notifications, "Notification Settings"),
           _buildSettingsTile(Icons.star, "Premium Features"),
           _buildSettingsTile(Icons.call, "Contact Us"),
           _buildSettingsTile(Icons.group, "Meet the Team"),
-          _buildSettingsTile(Icons.straighten, "Tank Configuration"),
+
           const SizedBox(height: 20),
           _buildLogoutButton(), // ✅ Logout button added
         ],
@@ -79,21 +80,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
               builder: (context) => const AccountSettingsScreen(),
             ),
           );
-        }
-        else if (title == "Tank Configuration"){
+        } else if (title == "Tank Configuration") {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context)=> const TankConfigurationScreen()),
-
+            MaterialPageRoute(
+              builder: (context) => const TankConfigurationScreen(),
+            ),
           );
-        }
-        else if (title == "Wi-Fi Configuration"){
+        } else if (title == "Wi-Fi Configuration") {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context)=> const WiFiConfigurationScreen())
+            MaterialPageRoute(
+              builder: (context) => const WiFiConfigurationScreen(),
+            ),
           );
-      
-          
         }
       },
       child: Container(
