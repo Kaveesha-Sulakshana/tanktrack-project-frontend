@@ -78,7 +78,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       print("Updating password in MongoDB...");
       String? token = await user?.getIdToken();
       final response = await http.put(
-        Uri.parse("http://10.0.2.2:8080/auth/update-mongo-password"),
+        Uri.parse("http://localhost:8080/auth/update-password?"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
