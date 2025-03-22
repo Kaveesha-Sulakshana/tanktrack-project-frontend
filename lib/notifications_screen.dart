@@ -22,7 +22,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   void _requestFCMToken() async {
     String? token = await FirebaseMessaging.instance.getToken();
-    print("FCM Token: $token"); // ✅ Print Token for Debugging
+    print("FCM Token: $token");
     if (token != null) {
       _sendTokenToBackend(token);
     } else {
@@ -70,24 +70,62 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notifications"),
+        title: const Text(
+          "Notifications",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+        ),
         backgroundColor: const Color.fromARGB(255, 50, 45, 85),
       ),
-      body:
-          notifications.isEmpty
-              ? const Center(child: Text("No Notifications"))
-              : ListView.builder(
-                itemCount: notifications.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    margin: const EdgeInsets.all(10),
-                    child: ListTile(
-                      title: Text(notifications[index]),
-                      leading: const Icon(Icons.notifications),
+      body: Container(
+        decoration: const BoxDecoration(color: Color.fromARGB(255, 50, 45, 85)),
+        child:
+            notifications.isEmpty
+                ? const Center(
+                  child: Text(
+                    "No Notifications",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xFF5E35B1),
+                      fontWeight: FontWeight.w500,
                     ),
-                  );
-                },
-              ),
+                  ),
+                )
+                : ListView.builder(
+                  itemCount: notifications.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      color: const Color.fromARGB(119, 240, 194, 142),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 15,
+                      ),
+                      elevation: 6,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 20,
+                        ),
+                        title: Text(
+                          notifications[index],
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        leading: const Icon(
+                          Icons.notifications,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+      ),
     );
   }
 }
