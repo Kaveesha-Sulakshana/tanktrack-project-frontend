@@ -6,7 +6,7 @@ class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
 
   // Replace with your actual marketing website link
-  final String marketingSiteUrl = "https://your-tanktrack-marketing-site.com";
+  final String marketingSiteUrl = "https://tank-track-official.vercel.app/";
 
   @override
   Widget build(BuildContext context) {
@@ -90,16 +90,16 @@ class AboutUsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             Text(
-              "TankTrack is a real-time septic tank monitoring system developed by a team of passionate Computer Science students.\n\n"
-              "Our goal is to help users efficiently manage tank levels, avoid overflows, and stay informed through smart alerts and insights.\n\n"
-              "The system integrates IoT sensors with a Flutter-based frontend and a powerful Spring Boot backend. All data is stored securely using Firebase and MongoDB.\n\n"
-              "This solution is scalable, user-friendly, and aims to make waste management smarter and easier.",
+              "TankTrack is built to bring peace of mind to homeowners and property managers by offering a smarter way to monitor septic tank levels in real time.\n\n"
+              "With timely alerts, intuitive design, and reliable insights, we ensure that managing your tank is no longer a guesswork.\n\n"
+              "Behind this project is a dedicated team of Computer Science students passionate about solving real-world problems with innovative solutions.\n\n"
+              "We’re committed to sustainability, convenience, and creating impact — one tank at a time.",
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(fontSize: 15, color: Colors.white70),
             ),
             const SizedBox(height: 20),
             Text(
-              "Thank you for supporting our journey!",
+              "Thank you for being a part of our mission!",
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 16,

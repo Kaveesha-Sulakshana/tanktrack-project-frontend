@@ -62,7 +62,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingsTile(Icons.person, "Account Settings"),
           _buildSettingsTile(Icons.wifi, "Wi-Fi Configuration"),
           _buildSettingsTile(Icons.straighten, "Tank Configuration"),
-          _buildSettingsTile(Icons.notifications, "Notification Settings"),
           _buildSettingsTile(Icons.star, "Premium Features"),
           _buildSettingsTile(Icons.call, "About Us"),
           _buildSettingsTile(Icons.group, "Meet the Team"),
