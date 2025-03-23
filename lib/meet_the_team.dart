@@ -9,9 +9,7 @@ class MeetTheTeamScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 50, 45, 85),
-        ),
+        decoration: const BoxDecoration(color: Color.fromARGB(255, 50, 45, 85)),
         child: SafeArea(
           child: Column(
             children: [
@@ -40,19 +38,19 @@ class MeetTheTeamScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Icon(Icons.group, color: Colors.white, size: 28),
+          IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
           Text(
-            "Meet The Team",
+            "TEAM TANK TRACK",
             style: GoogleFonts.poppins(
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-          ),
+          const Icon(Icons.group, color: Colors.white, size: 28),
         ],
       ),
     );
@@ -66,12 +64,7 @@ class MeetTheTeamScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          gradient: LinearGradient(
-            colors: [
-              Colors.white.withOpacity(0.2),
-              Colors.white.withOpacity(0.1),
-            ],
-          ),
+          color: const Color.fromARGB(108, 240, 194, 142),
           border: Border.all(color: Colors.white.withOpacity(0.2)),
         ),
         child: Column(
@@ -86,7 +79,7 @@ class MeetTheTeamScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              "Meet the talented developers behind this application.",
+              "Meet the talented developers behind project TANK TRACK.",
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(fontSize: 14, color: Colors.white70),
             ),
@@ -99,46 +92,41 @@ class MeetTheTeamScreen extends StatelessWidget {
   Widget _buildTeamGrid() {
     final List<Map<String, String>> developers = [
       {
-        'name': 'Alex Chen',
-        'role': 'Lead Developer',
+        'name': 'ASHEN',
+        'role': '#THE_CHIEF',
         'github': 'https://github.com/alexchen',
         'linkedin': 'https://linkedin.com/in/alexchen',
-        'avatar': 'assets/dev1.png',
       },
       {
-        'name': 'Sophia Rodriguez',
-        'role': 'UI/UX Designer',
+        'name': 'MADUKA',
+        'role': '#BACKEND_PHANTOM',
         'github': 'https://github.com/sophiarodriguez',
         'linkedin': 'https://linkedin.com/in/sophiarodriguez',
-        'avatar': 'assets/dev2.png',
       },
       {
-        'name': 'Marcus Johnson',
-        'role': 'Backend Developer',
+        'name': 'KAVEESHA',
+        'role': '#UI_WIZARD',
         'github': 'https://github.com/marcusj',
         'linkedin': 'https://linkedin.com/in/marcusjohnson',
-        'avatar': 'assets/dev3.png',
       },
       {
-        'name': 'Priya Patel',
-        'role': 'Mobile Developer',
+        'name': 'SHAVANTHA',
+        'role': '#QUERY_MASTER',
         'github': 'https://github.com/priyapatel',
         'linkedin': 'https://linkedin.com/in/priyapatel',
-        'avatar': 'assets/dev4.png',
       },
       {
-        'name': 'David Kim',
-        'role': 'Database Engineer',
+        'name': 'HIRUSHI',
+        'role': '#FRONTEND_DIVA',
         'github': 'https://github.com/davidkim',
         'linkedin': 'https://linkedin.com/in/davidkim',
-        'avatar': 'assets/dev5.png',
       },
       {
-        'name': 'Emma Wilson',
-        'role': 'QA Engineer',
-        'github': 'https://github.com/emmawilson',
-        'linkedin': 'https://linkedin.com/in/emmawilson',
-        'avatar': 'assets/dev6.png',
+        'name': 'SHARADHEE',
+        'role': '#TECH_ENCHANTRESS',
+        'github': 'https://github.com/kawyajayarathna',
+        'linkedin':
+            'https://www.linkedin.com/in/sharadee-jayarathna-9a0500337/',
       },
     ];
 
@@ -161,7 +149,6 @@ class MeetTheTeamScreen extends StatelessWidget {
             role: dev['role']!,
             githubUrl: dev['github']!,
             linkedinUrl: dev['linkedin']!,
-            avatarPath: dev['avatar']!,
           );
         },
       ),
@@ -173,19 +160,11 @@ class MeetTheTeamScreen extends StatelessWidget {
     required String role,
     required String githubUrl,
     required String linkedinUrl,
-    required String avatarPath,
   }) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.12),
-            Colors.white.withOpacity(0.06),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: const Color.fromARGB(108, 240, 194, 142),
         border: Border.all(color: Colors.white.withOpacity(0.08)),
       ),
       child: Column(
@@ -193,20 +172,13 @@ class MeetTheTeamScreen extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 38,
-            backgroundColor: Colors.white.withOpacity(0.2),
-            child: ClipOval(
-              child: Image.asset(
-                avatarPath,
-                width: 70,
-                height: 70,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(
-                    Icons.person,
-                    size: 50,
-                    color: Colors.white70,
-                  );
-                },
+            backgroundColor: const Color.fromARGB(255, 50, 45, 85),
+            child: Text(
+              name[0],
+              style: GoogleFonts.poppins(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 240, 194, 142),
               ),
             ),
           ),
@@ -216,12 +188,15 @@ class MeetTheTeamScreen extends StatelessWidget {
             style: GoogleFonts.poppins(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: const Color.fromARGB(255, 50, 45, 85),
             ),
           ),
           Text(
             role,
-            style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: const Color.fromARGB(255, 50, 45, 85),
+            ),
           ),
           const SizedBox(height: 8),
           Row(
@@ -239,7 +214,11 @@ class MeetTheTeamScreen extends StatelessWidget {
 
   Widget _buildIconButton(IconData icon, String url) {
     return IconButton(
-      icon: Icon(icon, color: Colors.white70, size: 20),
+      icon: Icon(
+        icon,
+        color: const Color.fromARGB(255, 240, 194, 142),
+        size: 20,
+      ),
       onPressed: () async {
         final Uri uri = Uri.parse(url);
         if (await canLaunchUrl(uri)) {
