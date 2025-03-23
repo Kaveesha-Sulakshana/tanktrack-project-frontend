@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'tank_service.dart'; // ✅ Import the API service
+import 'package:firebase_auth/firebase_auth.dart';
+import 'tank_service.dart';
 
 class TankConfigurationScreen extends StatefulWidget {
   const TankConfigurationScreen({super.key});
@@ -18,16 +19,26 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
   double? currentDepth;
   double? currentSensorDistance;
 
+  String? userEmail;
+  final String tankId =
+      "your-tank-id"; // Replace with actual tankId or make dynamic
+
   @override
   void initState() {
     super.initState();
+    _loadUserEmail();
     _fetchTankConfiguration();
   }
 
-  // 🔹 Fetch existing Tank Configuration
+  Future<void> _loadUserEmail() async {
+    final user = FirebaseAuth.instance.currentUser;
+    setState(() {
+      userEmail = user?.email;
+    });
+  }
+
   Future<void> _fetchTankConfiguration() async {
     try {
-      const String tankId = "your-tank-id"; // Replace with actual tankId
       Map<String, dynamic>? tankConfig = await TankService.getTankConfiguration(
         tankId,
       );
@@ -47,7 +58,6 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
     }
   }
 
-  // 🔹 Save Tank Configuration
   Future<void> _saveTankConfiguration() async {
     if (depthController.text.isEmpty || sensorDistanceController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -71,11 +81,15 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
     }
 
     try {
-      await TankService.saveTankConfiguration(depth, sensorDistance);
+      await TankService.saveTankConfiguration(
+        depth,
+        sensorDistance,
+        userEmail ?? "",
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Tank Configuration Saved Successfully")),
       );
-      _fetchTankConfiguration(); // Refresh data
+      _fetchTankConfiguration();
     } catch (e) {
       print("❌ Error saving configuration: $e");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -115,10 +129,7 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Image.asset(
-                      "assets/truck.png",
-                      width: 130,
-                    ), // Ensure you have a matching image
+                    Image.asset("assets/truck.png", width: 130),
                     const SizedBox(height: 40),
                     _buildLabel("Tank Depth"),
                     _buildTextField(
@@ -126,7 +137,7 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
                       hint: "Enter depth (Meters)",
                     ),
                     const SizedBox(height: 20),
-                    _buildLabel("Sensor Distance "),
+                    _buildLabel("Sensor Distance"),
                     _buildTextField(
                       controller: sensorDistanceController,
                       hint: "Enter sensor distance (Meters)",
