@@ -22,9 +22,11 @@ class _HomeScreenState extends State<HomeScreen> {
   String _rainCategory = "";
   String _location = "";
   bool _isLoadingWeather = true;
-
   int _selectedIndex = 0;
   String firstName = "User";
+  double filledHeight = 0;
+  double averageDistance = 0;
+  double tankHeight = 0;
   @override
   void initState() {
     super.initState();
@@ -34,16 +36,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _fetchData() {
-    dbRef.onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        setState(() {
-          tankPercentage = double.parse(
-            event.snapshot.child('percentage').value.toString(),
-          );
-        });
-      }
-    });
-  }
+  dbRef.onValue.listen((event) {
+    if (event.snapshot.value != null) {
+      setState(() {
+        tankPercentage = double.parse(
+          event.snapshot.child('percentage').value.toString(),
+        );
+        filledHeight = double.parse(
+          event.snapshot.child('filledHeight').value.toString(),
+        );
+        averageDistance = double.parse(
+          event.snapshot.child('averageDistance').value.toString(),
+        );
+        tankHeight = double.parse(
+          event.snapshot.child('tankHeight').value.toString(),
+        );
+        
+      });
+    }
+  });
+}
 
   Future<void> _fetchUserFirstName() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -383,10 +395,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10), // ⬅️ Reduced vertical padding
+    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
     child: Container(
       width: double.infinity,
-      height: 130, // ⬅️ Reduced height from 150
+      height: 130,
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 49, 44, 81),
         borderRadius: BorderRadius.circular(20),
@@ -450,6 +462,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
+                      const SizedBox(height: 6),
+                      Text(
+                        "Tank Height: ${filledHeight.toStringAsFixed(0)} / ${tankHeight.toStringAsFixed(0)} CM",
+                        style: const TextStyle(
+                          color: Color.fromARGB(247, 240, 194, 142),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -459,6 +480,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 }
+
 
 
 

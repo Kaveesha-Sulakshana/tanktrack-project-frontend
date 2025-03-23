@@ -67,7 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingsTile(Icons.group, "Meet the Team"),
 
           const SizedBox(height: 20),
-          _buildLogoutButton(), // ✅ Logout button added
+          _buildLogoutButton(), 
         ],
       ),
     );
