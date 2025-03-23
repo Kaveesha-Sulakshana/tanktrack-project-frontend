@@ -22,11 +22,14 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
   bool isLoading = true;
   Timer? timer;
   double latestPercentage = 0.0;
+  double? monthlyIncrement;
+
 
 
   @override
   void initState() {
     super.initState();
+    fetchMonthlyIncrement();
     fetchReport();
     timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
       fetchReport();
@@ -61,6 +64,28 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
       print("Error fetching data: $e");
     }
   }
+
+
+  Future<void> fetchMonthlyIncrement() async {
+  try {
+    final response = await http.get(
+      Uri.parse("http://10.0.2.2:8080/api/tank/monthly-increment"),
+    );
+    if (response.statusCode == 200) {
+      final value = double.tryParse(response.body);
+      if (value != null && mounted) {
+        setState(() {
+          monthlyIncrement = value;
+        });
+      }
+    } else {
+      print("Failed to fetch monthly increment: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("Error fetching monthly increment: $e");
+  }
+}
+
 
   // Function to generate and save PDF
   Future<void> generatePDF() async {
@@ -312,17 +337,19 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
                       Column(
                         children: [
                           buildTankIndicator(latestPercentage),
-                          SizedBox(height: 10),
-                          Text(
-                            "Estimated days to full: ${_calculateDaysToFull(latestPercentage)}",
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ),
-                          Text(
-                            "Current daily usage: ${_calculateDailyUsage()}%",
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ),
+                          SizedBox(height: 10), 
                         ],
                       ),
+                    if (monthlyIncrement != null)
+                    Text(
+                      "📈 Monthly increment: ${monthlyIncrement! >= 0 ? '+' : ''}${monthlyIncrement!.toStringAsFixed(1)} cm",
+                      style: TextStyle(
+                        color: monthlyIncrement! >= 0 ? Colors.greenAccent : Colors.redAccent,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+  
 
                     SizedBox(height: 20),
                     Text(

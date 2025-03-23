@@ -9,7 +9,7 @@ class PremiumScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          color: const Color.fromARGB(255, 50, 45, 85),
+          color: Color.fromARGB(255, 50, 45, 85),
         ),
         child: Center(
           child: Column(
