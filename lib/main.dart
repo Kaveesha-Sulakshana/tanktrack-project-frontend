@@ -66,10 +66,11 @@ class _AuthGateState extends State<AuthGate> {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print("User granted permission for notifications");
       String? fcmToken = await messaging.getToken();
-      if (fcmToken != null) {
+      if (fcmToken != null){
         _sendTokenToBackend(fcmToken);
       }
-    } else {
+      
+        } else {
       print("User denied notifications permission");
     }
 

@@ -23,12 +23,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   void _requestFCMToken() async {
     String? token = await FirebaseMessaging.instance.getToken();
     print("FCM Token: $token");
-    if (token != null) {
-      _sendTokenToBackend(token);
-    } else {
-      print("Failed to get FCM token");
+    _sendTokenToBackend(token!);
     }
-  }
 
   void _sendTokenToBackend(String token) async {
     const String apiUrl = "http://10.0.2.2:8080/api/save-fcm-token";
