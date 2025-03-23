@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/about_us.dart';
 import 'package:flutter_application_1/meet_the_team.dart';
+import 'package:flutter_application_1/premium_screen.dart';
 import 'package:flutter_application_1/tank_configuration.dart';
 import 'package:flutter_application_1/wifi_configuration.dart';
 import 'home_screen.dart';
@@ -106,6 +107,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const MeetTheTeamScreen()),
+          );
+        } else if (title == "Premium Features") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const PremiumScreen()),
           );
         }
       },

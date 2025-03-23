@@ -59,6 +59,7 @@ flutter:
     - assets/service4.png
     - assets/logo.png
     - assets/logomark.png
+    - assets/premium.png
     
 
 flutter_icons:
