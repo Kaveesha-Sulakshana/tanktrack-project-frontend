@@ -21,7 +21,7 @@ class _TankConfigurationScreenState extends State<TankConfigurationScreen> {
 
   String? userEmail;
   final String tankId =
-      "your-tank-id"; // Replace with actual tankId or make dynamic
+      "your-tank-id"; 
 
   @override
   void initState() {

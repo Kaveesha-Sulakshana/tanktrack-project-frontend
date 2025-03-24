@@ -5,7 +5,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // Email & Password Login
+  
   Future<User?> signInWithEmail(String email, String password) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
@@ -22,10 +22,10 @@ class AuthService {
     }
   }
 
-  // Google Sign-In (Returns User, Not String)
+  
   Future<User?> signInWithGoogle() async {
     try {
-      await _googleSignIn.signOut(); // Ensure clean login session
+      await _googleSignIn.signOut(); 
 
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
@@ -54,54 +54,54 @@ class AuthService {
         print("User Name: ${user.displayName}");
         print("User Photo: ${user.photoURL}");
 
-        // Retrieve Firebase ID Token
+       
         String? firebaseToken = await getFirebaseToken();
         print("🔥 Firebase ID Token: $firebaseToken");
 
-        return user; // Return the user instead of token
+        return user; 
       } else {
-        print("❌ Google Sign-In failed: No user found.");
+        print(" Google Sign-In failed: No user found.");
         return null;
       }
     } on FirebaseAuthException catch (e) {
-      print("❌ Firebase Auth Error (Google Sign-In): ${e.message}");
+      print("\ Firebase Auth Error (Google Sign-In): ${e.message}");
       return null;
     } catch (e) {
-      print("❌ Unexpected error in Google Sign-In: $e");
+      print(" Unexpected error in Google Sign-In: $e");
       return null;
     }
   }
 
-  // Get Firebase ID Token
+  
   Future<String?> getFirebaseToken() async {
     User? user = _auth.currentUser;
     if (user != null) {
       String? token = await user.getIdToken(true);
-      print("🔥 Firebase ID Token (Separate Request): $token");
+      print(" Firebase ID Token (Separate Request): $token");
       return token;
     } else {
-      print("❌ No user logged in.");
+      print(" No user logged in.");
       return null;
     }
   }
 
-  // Logout
+ 
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();
       await _auth.signOut();
-      print("✅ User successfully signed out.");
+      print(" User successfully signed out.");
     } catch (e) {
-      print("❌ Error signing out: $e");
+      print(" Error signing out: $e");
     }
   }
 
-  // Get current user
+  
   User? getCurrentUser() {
     return _auth.currentUser;
   }
 
-  // Check if user is logged in
+  
   Future<bool> isUserLoggedIn() async {
     try {
       User? user = _auth.currentUser;
@@ -110,12 +110,12 @@ class AuthService {
         return _auth.currentUser != null;
       }
     } catch (e) {
-      print("❌ Error checking user login status: $e");
+      print(" Error checking user login status: $e");
     }
     return false;
   }
 
-  // Get user profile details safely
+ 
   Map<String, dynamic>? getUserProfile() {
     User? user = _auth.currentUser;
     if (user != null) {

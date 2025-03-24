@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoadingWeather = true;
   int _selectedIndex = 0;
   String firstName = "User";
-  double filledHeight = 0;
+  double filledHeight =0 ;
   double averageDistance = 0;
   double tankHeight = 0;
   @override
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
         averageDistance = double.parse(
           event.snapshot.child('averageDistance').value.toString(),
         );
-        tankHeight = double.parse(
+        tankHeight  = double.parse(
           event.snapshot.child('tankHeight').value.toString(),
         );
         
@@ -132,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔹 Top AppBar Section
+
   Widget _buildAppBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔹 User Welcome Card
+
   Widget _buildUserCard(String firstName) {
     String todayDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
     return Padding(
@@ -234,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔹 Tank Level Circular Indicator
+
   Widget _buildTankIndicator() {
     Color getColor(double percentage) {
       if (percentage <= 20) return const Color.fromARGB(191, 0, 255, 0);
@@ -342,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔹 Bottom Navigation Bar
+
   Widget _buildBottomNavigationBar() {
     return Container(
       decoration: const BoxDecoration(color: Color.fromARGB(255, 50, 45, 85)),
@@ -381,16 +381,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBottomPlaceholder() {
   String getWeatherImage(String category) {
     switch (category) {
-      case "Low":
+      case "Sunny":
         return 'assets/sunny.png';
-      case "Average":
+      case "Cloudy":
         return 'assets/cloudy.png';
-      case "High":
+      case "Rain":
         return 'assets/rainy.png';
-      case "Critical":
+      case "stormy":
         return 'assets/storm.png';
       default:
-        return 'assets/unknown.png';
+        return '';
     }
   }
 

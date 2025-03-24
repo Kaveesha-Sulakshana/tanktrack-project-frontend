@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const LoginScreen(),
-        ), // Navigate to LoginScreen
+        ), 
       );
     });
   }
@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: const Center(
           child: Image(
             image: AssetImage('assets/logo.png'),
-            width: 500, // Maintained the width for consistency
+            width: 500, 
             height: 500,
           ),
         ),

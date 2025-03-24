@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
 
-  // Replace with your actual marketing website link
+
   final String marketingSiteUrl = "https://tank-track-official.vercel.app/";
 
   @override

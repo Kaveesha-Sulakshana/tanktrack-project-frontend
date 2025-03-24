@@ -49,7 +49,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
           double percentage = (rawData["latestPercentage"] as num).toDouble();
           setState(() {
             reportData[month] = percentage;
-            latestPercentage = percentage; // ✅ Track latest percentage correctly
+            latestPercentage = percentage; 
             isLoading = false;
           });
 
@@ -87,11 +87,11 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
 }
 
 
-  // Function to generate and save PDF
+ 
   Future<void> generatePDF() async {
     final pdf = pw.Document();
 
-    // ✅ Load Images from Assets
+    
     final ByteData logoBytes = await rootBundle.load('assets/logo1.png');
     final Uint8List logoImage = logoBytes.buffer.asUint8List();
 
@@ -100,10 +100,10 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
 
     pdf.addPage(
       pw.MultiPage(
-        // ✅ MultiPage ensures content doesn't get cut off
+      
         build:
             (pw.Context context) => [
-              // ✅ Add Logo at the Top
+              
               pw.Center(
                 child: pw.Image(
                   pw.MemoryImage(logoImage),
@@ -113,7 +113,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
               ),
               pw.SizedBox(height: 10),
 
-              // ✅ Title
+              
               pw.Center(
                 child: pw.Text(
                   "TANK TRACK",
@@ -135,7 +135,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
               ),
               pw.SizedBox(height: 10),
 
-              // ✅ Styled Table for Tank Data
+              
               pw.Table.fromTextArray(
                 headers: ["Month", "Percentage"],
                 data:
@@ -155,43 +155,43 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
 
               pw.SizedBox(height: 20),
 
-              // ✅ Mini Bar Graph inside PDF with Labels
+            
               pw.Container(
-                height: 350, // ✅ Increased height for better spacing
+                height: 350, 
                 width: 400,
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.center,
                   children:
                       reportData.entries.map((entry) {
                         double barHeight =
-                            entry.value * 3; // ✅ Scale bars correctly
+                            entry.value * 3; 
                         return pw.Column(
                           mainAxisAlignment: pw.MainAxisAlignment.end,
                           children: [
-                            // ✅ Add Percentage Labels Above Bars
+                           
                             pw.Text(
                               "${entry.value.toStringAsFixed(1)}%",
                               style: pw.TextStyle(fontSize: 10),
                             ),
 
-                            // ✅ Bar Graph (Ensures visibility)
+                            
                             pw.Container(
-                              width: 30, // ✅ Increased width of bars
+                              width: 30, 
                               height:
                                   barHeight < 15
                                       ? 15
-                                      : barHeight, // ✅ Ensure minimum height
+                                      : barHeight, 
                               color: PdfColors.blue,
                               margin: pw.EdgeInsets.symmetric(horizontal: 4),
                             ),
 
-                            // ✅ Add Month Labels Below Bars
+                            
                             pw.SizedBox(height: 5),
                             pw.Text(
                               entry.key.substring(
                                 0,
                                 3,
-                              ), // Show first 3 letters of the month
+                              ), 
                               style: pw.TextStyle(fontSize: 10),
                             ),
                           ],
@@ -202,7 +202,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
 
               pw.SizedBox(height: 20),
 
-              // ✅ Footer: Generated Date
+          
               pw.Text(
                 "Generated on: ${DateTime.now()}",
                 style: pw.TextStyle(
@@ -213,7 +213,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
 
               pw.SizedBox(height: 30),
 
-              // ✅ Verified by Section with Seal Image (Always on the same page)
+              
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -222,19 +222,19 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
                     pw.MemoryImage(sealImage),
                     width: 80,
                     height: 80,
-                  ), // ✅ Add Seal Image
-                ],
+                  ), 
+                ]
               ),
             ],
       ),
     );
 
-    // Save PDF file
+
     final output = await getExternalStorageDirectory();
     final file = File("${output!.path}/Monthly_Report.pdf");
     await file.writeAsBytes(await pdf.save());
 
-    // Open the PDF
+
     OpenFile.open(file.path);
   }
 
@@ -262,7 +262,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
           ),
         ),
 
-        // Water Fill with Smooth Animation
+
         Positioned(
           bottom: 0,
           child: ClipPath(
@@ -270,13 +270,13 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
             child: AnimatedContainer(
               duration: Duration(
                 seconds: 2,
-              ), // ✅ Smooth transition in 2 seconds
-              curve: Curves.easeInOut, // ✅ Smooth easing effect
+              ), 
+              curve: Curves.easeInOut, 
               width: 100,
               height: waterHeight.clamp(
                 0,
                 200,
-              ), // ✅ Ensures water stays inside the tank
+              ),
               decoration: BoxDecoration(
                 color: tankColor.withOpacity(0.9),
                 borderRadius: BorderRadius.only(
@@ -288,7 +288,6 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
           ),
         ),
 
-        // Percentage Label
         Positioned(
           top: 10,
           child: Text(
@@ -413,13 +412,13 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
                                   backDrawRodData: BackgroundBarChartRodData(
                                     show: true,
                                     toY:
-                                        100, // ✅ This ensures empty bars show full height
+                                        100, 
                                     color: const Color.fromARGB(
                                       60,
                                       240,
                                       194,
                                       142,
-                                    ), // ✅ Empty bar color before filling
+                                    ), 
                                   ),
                                 ),
                               ],
@@ -469,12 +468,12 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
                             leftTitles: AxisTitles(
                               sideTitles: SideTitles(
                                 showTitles: false,
-                              ), // ❌ Remove Left Labels
+                              ),
                             ),
                             topTitles: AxisTitles(
                               sideTitles: SideTitles(
                                 showTitles: false,
-                              ), // ❌ Remove Top Labels
+                              ),
                             ),
                             rightTitles: AxisTitles(
                               sideTitles: SideTitles(

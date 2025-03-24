@@ -52,7 +52,6 @@ class _AuthGateState extends State<AuthGate> {
   Future<void> _setupFCM() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    // Request permission for notifications
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       announcement: false,
@@ -74,14 +73,14 @@ class _AuthGateState extends State<AuthGate> {
       print("User denied notifications permission");
     }
 
-    // Listen for foreground messages
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("New foreground notification: ${message.notification?.title}");
     });
   }
 
   void _sendTokenToBackend(String token) async {
-    const String apiUrl = "http://localhost:8080/api/save-fcm-token";
+    const String apiUrl = "http://10.0.2.2:8080/api/save-fcm-token";
 
     try {
       final response = await http.post(

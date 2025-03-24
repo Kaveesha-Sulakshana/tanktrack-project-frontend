@@ -36,7 +36,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
 
     try {
-      // Re-authenticate user before changing password
+      
       AuthCredential credential = EmailAuthProvider.credential(
         email: user!.email!,
         password: oldPasswordController.text,
@@ -44,10 +44,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
       await user!.reauthenticateWithCredential(credential);
 
-      // Update Firebase Password
+      
       await user!.updatePassword(newPasswordController.text);
 
-      // 🔹 Call MongoDB API to update password in backend
+      
       await _updateMongoDBPassword();
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -72,13 +72,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     });
   }
 
-  /// 🔹 Function to update the password in MongoDB
+  
   Future<void> _updateMongoDBPassword() async {
     try {
       print("Updating password in MongoDB...");
       String? token = await user?.getIdToken();
       final response = await http.put(
-        Uri.parse("http://localhost:8080/auth/update-password?"),
+        Uri.parse("http://10.0.2.2:8080/auth/update-password?"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",

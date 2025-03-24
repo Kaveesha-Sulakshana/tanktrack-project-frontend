@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 class TankService {
   static const String baseUrl = "http://10.0.2.2:8080/api/tank";
 
-  /// Save tank configuration to backend (now includes email)
   static Future<void> saveTankConfiguration(
     double depth,
     double sensorDistance,
@@ -17,7 +16,7 @@ class TankService {
       body: jsonEncode({
         "depth": depth,
         "sensorDistance": sensorDistance,
-        "email": email, // 🔹 Send email to backend
+        "email": email,
       }),
     );
 
@@ -29,7 +28,6 @@ class TankService {
     }
   }
 
-  /// Fetch tank configuration from backend by tankId
   static Future<Map<String, dynamic>?> getTankConfiguration(
     String tankId,
   ) async {
@@ -48,7 +46,6 @@ class TankService {
     }
   }
 
-  /// Optional: Fetch all tank configurations
   static Future<List<dynamic>> fetchAllConfigurations() async {
     final url = Uri.parse(baseUrl);
     final response = await http.get(url);

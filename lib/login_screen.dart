@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
         String? idToken = await user.getIdToken();
         print("Google Sign-In Token: $idToken");
 
-        // Send token to backend
+ 
         await _sendTokenToBackend(idToken!);
 
         Navigator.pushReplacement(
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // ✅ FUNCTION: Forgot Password Logic
+
   Future<void> _resetPassword() async {
     String email = emailController.text.trim();
     if (email.isEmpty) {
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
         const SnackBar(content: Text("Password reset link sent to email.")),
       );
 
-      // ✅ UPDATE PASSWORD IN MONGODB
+   
       await _updateMongoDBPassword(email);
     } catch (e) {
       print("Error resetting password: $e");
@@ -119,7 +119,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // ✅ FUNCTION: Update Password in MongoDB after Firebase Reset
   Future<void> _updateMongoDBPassword(String email) async {
     const String backendUrl = "http://10.0.2.2:8080/auth/update-password";
 

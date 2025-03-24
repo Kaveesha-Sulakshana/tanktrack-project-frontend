@@ -22,7 +22,6 @@ class _WiFiConfigurationScreenState extends State<WiFiConfigurationScreen> {
     _fetchWiFiConfiguration();
   }
 
-  // Fetch existing WiFi configuration
   Future<void> _fetchWiFiConfiguration() async {
     try {
       const String tankId = "your-tank-id"; // Replace with actual tankId
@@ -43,7 +42,6 @@ class _WiFiConfigurationScreenState extends State<WiFiConfigurationScreen> {
     }
   }
 
-  // Save WiFi configuration
   Future<void> _saveWiFiConfiguration() async {
     if (ssidController.text.isEmpty || passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

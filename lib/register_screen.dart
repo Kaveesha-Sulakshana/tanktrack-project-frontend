@@ -51,14 +51,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      // Register user in Firebase Authentication
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(
             email: emailController.text.trim(),
             password: passwordController.text.trim(),
           );
 
-      // Send data to MongoDB
       await _sendDataToMongoDB(
         firstNameController.text.trim(),
         lastNameController.text.trim(),
@@ -66,7 +64,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         passwordController.text.trim(),
       );
 
-      // Navigate to home screen or show success message
       Navigator.pop(context);
     } catch (error) {
       setState(() {
@@ -86,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String password,
   ) async {
     const String apiUrl =
-        "http://10.0.2.2:8080/auth/register"; // Use this for emulator
+        "http://10.0.2.2:8080/auth/register"; 
 
     try {
       final response = await http.post(

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'change_password_screen.dart'; // ✅ Import Change Password Screen
+import 'change_password_screen.dart'; 
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -32,7 +32,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
       try {
         String? token = await user!.getIdToken();
-        print("🔥 Firebase Token: $token");
+        print(" Firebase Token: $token");
 
         final response = await http.get(
           Uri.parse("http://10.0.2.2:8080/auth/user?email=${user!.email}"),
@@ -52,10 +52,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             });
           }
         } else {
-          print("❌ Failed to fetch user data: ${response.body}");
+          print(" Failed to fetch user data: ${response.body}");
         }
       } catch (e) {
-        print("❌ Error fetching user data: $e");
+        print(" Error fetching user data: $e");
       }
     }
   }
@@ -75,7 +75,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               const SizedBox(height: 20),
               _buildAccountDetails(),
               const SizedBox(height: 30),
-              _buildChangePasswordButton(), // ✅ Button to go to Change Password Screen
+              _buildChangePasswordButton(), 
             ],
           ),
         ),
@@ -189,7 +189,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               MaterialPageRoute(
                 builder:
                     (context) =>
-                        const ChangePasswordScreen(), // ✅ Navigates to Change Password
+                        const ChangePasswordScreen(), 
               ),
             );
           },

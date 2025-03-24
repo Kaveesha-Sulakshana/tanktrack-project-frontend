@@ -15,7 +15,6 @@ class PremiumScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 50),
-              // Back Button
               Align(
                 alignment: Alignment.topLeft,
                 child: IconButton(
@@ -24,7 +23,6 @@ class PremiumScreen extends StatelessWidget {
                 ),
               ),
 
-              // Premium Features Text
               Text(
                 "Premium Features",
                 style: GoogleFonts.poppins(
@@ -36,12 +34,10 @@ class PremiumScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // Premium Image (Stars)
               Image.asset("assets/premium.png", width: 150),
 
               const SizedBox(height: 20),
 
-              // Upgrade to Premium Text
               Text(
                 "Upgrade to Premium",
                 style: GoogleFonts.poppins(
@@ -53,7 +49,6 @@ class PremiumScreen extends StatelessWidget {
 
               const SizedBox(height: 10),
 
-              // Description
               Text(
                 "Unlimited tank monitoring, Custom reports\nand so more!",
                 textAlign: TextAlign.center,
@@ -62,7 +57,6 @@ class PremiumScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // Feature List Box
               Container(
                 width: MediaQuery.of(context).size.width * 0.9,
                 padding: const EdgeInsets.all(20),
@@ -101,7 +95,6 @@ class PremiumScreen extends StatelessWidget {
     );
   }
 
-  // Feature List Item Builder
   Widget _buildFeatureItem(String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),

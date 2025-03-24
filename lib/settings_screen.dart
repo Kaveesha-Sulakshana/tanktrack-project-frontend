@@ -18,8 +18,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final int _selectedIndex = 2; // 0 = Home, 1 = Alerts, 2 = Settings
-
+  final int _selectedIndex = 2; 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,7 +145,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        onPressed: _logout, // ✅ Logout function call
+        onPressed: _logout, 
         child: const Text(
           "LOGOUT",
           style: TextStyle(
@@ -161,16 +160,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _logout() async {
     try {
-      await FirebaseAuth.instance.signOut(); // ✅ Ensure user is signed out
+      await FirebaseAuth.instance.signOut(); 
 
-      // ✅ Immediately navigate to login screen and remove history
       Future.delayed(Duration.zero, () {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => const LoginScreen(),
-          ), // Redirect to Login
-          (route) => false, // Removes all previous routes
+          ), 
+          (route) => false, 
         );
       });
     } catch (e) {
@@ -185,7 +183,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         49,
         44,
         81,
-      ), // Solid background from #0A00C1
+      ),
       child: BottomNavigationBar(
         backgroundColor: const Color.fromARGB(255, 49, 44, 81),
         type: BottomNavigationBarType.fixed,
@@ -194,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         selectedFontSize: 14,
         unselectedFontSize: 12,
         iconSize: 30,
-        currentIndex: _selectedIndex, // Highlight selected tab
+        currentIndex: _selectedIndex, 
         onTap: (index) {
           if (index == 0 && _selectedIndex != 0) {
             Navigator.pushReplacement(
