@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1095630927305",
+    "firebase_url": "https://tank-track-default-rtdb.firebaseio.com",
+    "project_id": "tank-track",
+    "storage_bucket": "tank-track.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095630927305:android:856b933cba9c56dd262418",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1095630927305-9qfr9g7o91qfbfjthk6kms01e99o94ok.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_application_1",
+            "certificate_hash": "a58401a129a8c17f05b52b6d26dd1a495d3dc6bb"
+          }
+        },
+        {
+          "client_id": "1095630927305-q8kunj7l83735ekf1on1q1cb0v8psu7r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU4aQ_JKXrcXoIJYioKiC5iOoBzWGOn0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095630927305-q8kunj7l83735ekf1on1q1cb0v8psu7r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
